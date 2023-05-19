@@ -7,7 +7,6 @@ header("Content-Type: text/html;charset=utf-8");
 session_start();
 
 $cursoCuerpoSelect = $_POST["cursoCuerpoSelect"];
-$ofertaSelect = $_POST["ofertaSelect"];
 
 // consulta BBDD
 // Include config environment file
@@ -21,14 +20,10 @@ if ($cursoCuerpoSelect <> "") {
     $queryExamenes = $queryExamenes . " AND e.idCuerpo = " . $cursoCuerpoSelect . " "; 
 }
 
-if ($ofertaSelect <> "") {
-    $queryExamenes = $queryExamenes . " AND ((e.idOferta is null and e.descripcion like '%TEST%') or o.id = " . $ofertaSelect . ") "; 
-}
-
 //printf($queryExamenes);
 //exit;
 
-$queryExamenes = $queryExamenes . " ORDER BY e.fecha_examen desc, a.nombre, e.modalidad, e.descripcion";
+$queryExamenes = $queryExamenes . " ORDER BY e.fecha_examen desc, e.descripcion, e.modalidad";
 
 $resultExamenes = mysqli_query($link, $queryExamenes);
 $myArray = array();
