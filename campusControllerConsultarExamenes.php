@@ -13,10 +13,8 @@ $ofertaSelect = $_POST["ofertaSelect"];
 // Include config environment file
 require_once "campusConfig.php";
 
-$queryExamenes = "SELECT distinct e.id, e.descripcion, o.descripcion as descripcionOferta, a.nombre as nombreAdm, e.modalidad, e.fecha_examen as fechaExamen
-    FROM tabExamen e 
-    LEFT JOIN tabOferta o ON e.idOferta = o.id
-    LEFT JOIN tabAdministracion a ON o.idAdministracion = a.id 
+$queryExamenes = "SELECT distinct e.id, e.descripcion, e.modalidad, e.fecha_examen as fechaExamen
+    FROM tabExamen e    
     WHERE 1 = 1 ";
 
 if ($cursoCuerpoSelect <> "") {

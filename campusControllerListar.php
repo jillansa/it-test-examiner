@@ -29,7 +29,7 @@ echo '<br>';
 
 // FILTRO DE CURSO (este filtro obligatorio), 
 $queryPregunta = "SELECT RAND() as random, p.id, p.texto, pc.id as idPreguntaClasificacion, pc.idClasificacion, co.tema, e.descripcion as examen, e.modalidad,
-IFNULL((select concat(o.descripcion,' ', o.anio) from tabOferta o where e.idOferta = o.id),'') as oferta, e.fecha_examen, 
+IFNULL(concat(e.administracion,' ', e.anioConvocatoria),'') as oferta, e.fecha_examen, 
 c.descripcion as cuerpo,
 i.link
 FROM tabPreguntas p
