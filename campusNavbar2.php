@@ -13,8 +13,7 @@
 		?>				
 			<a href="campusAulaVirtual.php">Aula Virtual</a>
 			<a href="campusCargarTest.php">Cargar Preguntas</a>
-			<a href="campusAdminOferta.php">Oferta y Temarios</a>
-			<a href="campusAdminTemarioCuerpos.php">Mi Temario-Cuerpos</a>
+			<a href="campusAdminTemarioCuerpos.php">Temario-Cursos</a>
 		<?php
 			}
 		?>

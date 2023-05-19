@@ -3,6 +3,10 @@
 session_start();
 header("Content-Type: text/html;charset=utf-8");
 
+// consulta BBDD
+// Include config environment file
+require_once "campusConfig.php";
+
 //ini_set("display_errors",1);
 //error_reporting(E_ALL);
  //code goes here
@@ -10,15 +14,74 @@ header("Content-Type: text/html;charset=utf-8");
 //data: { cursoCuerpoSelect: cuerpo, temaSelect: tema, nivelSelect: nivel},
 //data: { cursoCuerpoSelect: cuerpo, temaSelect: tema, nivelSelect: nivel},
 
+// podemos venir por recuperarSesion
 // En funcion del si es consulta nueva o se ha pulsado en siguiente, cogemos los datos del POST o de los almacenados en SESSION
 
-if ($_POST["idPreguntaClasificacion"] == "0") {
+
+if ($_POST["recuperarSesion"] == "1") {
+    
+    $querySesion = "SELECT sesionUsuario FROM tabUsuario WHERE id = " . $_SESSION["session_id_username"] . " " ; 
+    //print ($querySesion);
+    //exit;
+
+    $result = mysqli_query($link, $querySesion);
+
+    if (mysqli_num_rows($result) > 0) {
+        
+            //print ("recuperando: 1");
+            $row = mysqli_fetch_array($result);
+            //print ("procesando: " . $row['sesionUsuario']);
+            $obj = json_decode($row['sesionUsuario']);
+        
+    }
+    //print ("idPreguntaClasificacionRespondidas = " . $obj->{"idPreguntaClasificacionRespondidas"});
+    //exit;
+    
+
+    // buscar         
+    $cursoCuerpo = $obj->{'cursoCuerpoSelect'};
+    $bloque = $obj->{'bloqueSelect'};
+    $clasificacion = $obj->{"clasificacionSelect"};
+    $examen = $obj->{"examenSelect"};
+    $nivel = $obj->{"nivelSelect"};
+    $percentErrorFilter = $obj->{"percentErrorFilter"};
+    $textFilter = $obj->{"textFilter"};
+    $sinRespuestasFilter = $obj->{"sinRespuestasFilter"};
+    $favoritasFilter = $obj->{"favoritasFilter"};
+    $clasifPlusFilter = $obj->{"clasifPlusFilter"};
+    $bugFilter = $obj->{"bugFilter"};   
+    $noExisteRespuestaFilter = $obj->{"noExisteRespuestaFilter"}; 
+    $idPreguntaClasificacionRespondidas = $obj->{"idPreguntaClasificacionRespondidas"};
+    $_SESSION['aciertosSession'] = $obj->{"aciertosSession"};
+    $_SESSION['erroresSession'] = $obj->{"erroresSession"};
+    $_SESSION['sinContestarSession'] = $obj->{"sinContestarSession"};
+    $_SESSION['listaErroresSession'] = $obj->{"listaErroresSession"};
+
+
+    // guardamos las variables en session para mantener la consulta y poder avanzar pregunta a pregunta en ella
+    $_SESSION["cursoCuerpoSelect"] = $cursoCuerpo;
+    $_SESSION["bloqueSelect"] = $bloque;
+    $_SESSION["clasificacionSelect"] = $clasificacion;
+    $_SESSION["examenSelect"] = $examen;
+    $_SESSION["nivelSelect"] = $nivel;
+    $_SESSION["percentErrorFilter"] = $percentErrorFilter;
+    $_SESSION["textFilter"] = $textFilter;
+    $_SESSION["sinRespuestasFilter"] = $sinRespuestasFilter;
+    $_SESSION["favoritasFilter"] = $favoritasFilter;
+    $_SESSION["clasifPlusFilter"] = $clasifPlusFilter;
+    $_SESSION["bugFilter"] = $bugFilter;
+    $_SESSION["noExisteRespuestaFilter"] = $noExisteRespuestaFilter;
+    $_SESSION["idPreguntaClasificacionRespondidas"] = $idPreguntaClasificacionRespondidas;
+
+    //print ("idPreguntaClasificacionRespondidas = " . $idPreguntaClasificacionRespondidas);
+    //exit;
+
+
+} elseif ($_POST["idPreguntaClasificacion"] == "0") {
     // buscar         
     $cursoCuerpo = $_POST["cursoCuerpoSelect"];
     $bloque = $_POST["bloqueSelect"];
     $clasificacion = $_POST["clasificacionSelect"];
-    $tema = $_POST["temaSelect"];
-    $oferta = $_POST["ofertaSelect"];
     $examen = $_POST["examenSelect"];
     $nivel = $_POST["nivelSelect"];
     $percentErrorFilter = $_POST["percentErrorFilter"];
@@ -35,8 +98,6 @@ if ($_POST["idPreguntaClasificacion"] == "0") {
     $_SESSION["cursoCuerpoSelect"] = $cursoCuerpo;
     $_SESSION["bloqueSelect"] = $bloque;
     $_SESSION["clasificacionSelect"] = $clasificacion;
-    $_SESSION["temaSelect"] = $tema;
-    $_SESSION["ofertaSelect"] = $oferta;
     $_SESSION["examenSelect"] = $examen;
     $_SESSION["nivelSelect"] = $nivel;
     $_SESSION["percentErrorFilter"] = $percentErrorFilter;
@@ -54,8 +115,6 @@ if ($_POST["idPreguntaClasificacion"] == "0") {
     $cursoCuerpo = $_SESSION["cursoCuerpoSelect"];
     $bloque = $_SESSION["bloqueSelect"];
     $clasificacion = $_SESSION["clasificacionSelect"];
-    $tema = $_SESSION["temaSelect"];
-    $oferta = $_SESSION["ofertaSelect"];
     $examen = $_SESSION["examenSelect"];
     $nivel = $_SESSION["nivelSelect"];
     $percentErrorFilter = $_SESSION["percentErrorFilter"];
@@ -78,41 +137,32 @@ if ($_POST["idPreguntaClasificacion"] == "0") {
 
 
 
-// consulta BBDD
-// Include config environment file
-require_once "campusConfig.php";
+
 
 //TODO: idea, a nivel de test, una pregunta puede estar vinculada a 3 temas, seria como 3 preguntas, pero a nivel de tabPregunta solo esta 1 vez, a nivel de estadisticas solo 1 vez, pero a nivel de tema, la preguna puede aparece 3 veces en el buscador, ya que esta "duplicada" digamos para 3 temas. 
+
+
 // FILTRO DE CURSO (este filtro obligatorio), 
 $queryPregunta = "SELECT RAND() as random, p.id, p.texto, pc.id as idPreguntaClasificacion, pc.idClasificacion, co.tema, e.descripcion as examen, e.modalidad,
 IFNULL((select concat(o.descripcion,' ', o.anio) from tabOferta o where e.idOferta = o.id),'') as oferta, e.fecha_examen, 
-(select cu.descripcion from tabCuerpo cu where cu.id = " . $cursoCuerpo . " ) as cuerpo,
+c.descripcion as cuerpo,
 i.link
 FROM tabPreguntas p
 JOIN tabPreguntasClasificacion pc ON pc.idPregunta = p.id
-JOIN tabClasificacionOriginal co ON pc.idClasificacion = co.id
+JOIN tabClasificacion co ON pc.idClasificacion = co.id
 LEFT JOIN tabExamen e ON p.idExamen = e.id
 LEFT JOIN tabImagen i ON p.idImagen = i.id
-WHERE pc.id not in (". $idPreguntaClasificacionRespondidas .")";
+LEFT JOIN tabClasificacionCuerpo cc ON cc.idClasificacion = co.id
+LEFT JOIN tabCuerpo c ON cc.idCuerpo = c.id
+WHERE 
+cc.idCuerpo = " . $cursoCuerpo . "
+and pc.id not in (". $idPreguntaClasificacionRespondidas .")";
 //AND c.tipo = 1 ";
 
 // FILTRO DE CLASIFICACION (+)
 if (isset($clasifPlusFilter) && $clasifPlusFilter!= null && $clasifPlusFilter == "true") {
     $queryPregunta = $queryPregunta . " AND co.tipo = 1 ";
-} /*else {
-    // FILTRO DE CUERPO  (este filtro obligatorio)
-    // La pregunta esta vinculada a nivel de temario al cuerpo
-    // Se busca ser un poco mas ajustados al temario de cada convocatoria
-    $queryPregunta = $queryPregunta . " AND EXISTS (SELECT 1 
-        FROM  tabOfertaCuerpo_Clasificacion occ, tabOfertaCuerpo oc, 
-        tabClasificacion c, tabMapeoClasificacionOriginal m
-        WHERE oc.activa = 'S'
-        AND occ.idOfertaCuerpo = oc.id
-        AND occ.idClasificacion = c.id 
-        AND c.id = m.idClasificacion
-        AND m.idClasificacionOriginal = co.id
-        AND oc.idCuerpo = " . $cursoCuerpo . ") ";
-}*/
+} 
 
 // FILTRO DE BLOQUE
 if (isset($bloque) && $bloque!= null && $bloque!= "") {
@@ -124,39 +174,8 @@ if (isset($clasificacion) && $clasificacion!= null && $clasificacion!= "") {
     $queryPregunta = $queryPregunta . " AND (co.id = " . $clasificacion . ") ";
 }
 
-// FILTRO DE TEMA
-// La pregunta esta vinculada a temario oficial elegido
-if (isset($tema) && $tema!= null && $tema!= "") {
-    $pregunta['metadatos'] = $pregunta['metadatos'] . " | Tema Filter ON ";
-    $queryPregunta = $queryPregunta . " AND co.id IN ( 
-        -- sea un tema          
-        -- o un tema del bloque seleccionado
-        SELECT DISTINCT mapeo1.idClasificacionOriginal 
-        FROM tabClasificacion tema1, tabMapeoClasificacionOriginal mapeo1
-        WHERE mapeo1.idClasificacion =  tema1.id
-        AND tema1.id = " . $tema . "
-        UNION
-        SELECT DISTINCT mapeo2.idClasificacionOriginal 
-        FROM tabClasificacion tema2, tabClasificacion tema3, tabMapeoClasificacionOriginal mapeo2
-        WHERE mapeo2.idClasificacion =  tema3.id
-        AND tema2.id = " . $tema . "
-        AND tema3.idBloque = tema2.id
-    )";
-} else {
-    $pregunta['metadatos'] = $pregunta['metadatos'] . " | Tema Filter OFF ";
-}
-
-// FILTROS DE OFERTA, 
-// La pregunta esta vinculada al examen / oferta indicado
-/*if (isset($oferta) && $oferta!= null && $oferta!= "") {
-    $pregunta['metadatos'] = $pregunta['metadatos'] . " | Oferta Filter ON ";
-    $queryPregunta = $queryPregunta . " AND e.idOferta = " . $oferta . " ";
-} else {
-    $pregunta['metadatos'] = $pregunta['metadatos'] . " | Oferta Filter OFF ";
-}*/
 
 // FILTRO DE EXAMEN
-
 if (isset($examen) && $examen!= null && $examen!= "") {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Examen Filter ON ";
     $queryPregunta = $queryPregunta . " AND e.id = " . $examen . " ";
@@ -177,11 +196,17 @@ if (isset($nivel) && $nivel!= null && $nivel!= "") {
 // FILTRO DE TEXTO
 if (isset($textFilter) && $textFilter!= null && $textFilter!= "") {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Text Filter ON ";
-    $queryPregunta = $queryPregunta . " AND (
-            upper(p.texto) like '%" . $textFilter . "%' 
-            OR exists (select 1 from tabRespuestas tr 
-                where tr.idPregunta = p.id and upper(tr.texto) like '%".$textFilter."%')
-            )";
+
+    if (is_numeric($textFilter)) { // ID PREGUNTA
+        $queryPregunta = $queryPregunta . " 
+            AND p.id = " . $textFilter  . " ";
+    } else { // SINO TEXTO 
+        $queryPregunta = $queryPregunta . " AND (
+                upper(p.texto) like '%" . $textFilter . "%' 
+                OR exists (select 1 from tabRespuestas tr 
+                    where tr.idPregunta = p.id and upper(tr.texto) like '%".$textFilter."%')
+                )";
+    }
 } else {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Text Filter OFF ";
 }
@@ -469,7 +494,40 @@ $pregunta['aciertosSession'] = $_SESSION['aciertosSession'] ;       // calculo t
 $pregunta['erroresSession'] = $_SESSION['erroresSession'] ;
 $pregunta['sinContestarSession']= $_SESSION["sinContestarSession"];
 
+/**************************************************************************
 
+GUARDAR SESION 
+
+**************************************************************************/
+
+class Sesion {
+
+}
+
+$sesion = new Sesion();
+
+$sesion->cursoCuerpoSelect = $_SESSION["cursoCuerpoSelect"];
+$sesion->bloqueSelect = $_SESSION['bloqueSelect'];
+$sesion->clasificacionSelect = $_SESSION['clasificacionSelect'];
+$sesion->examenSelect = $_SESSION['examenSelect'];
+$sesion->nivelSelect = $_SESSION['nivelSelect'];
+$sesion->percentErrorFilter = $_SESSION['percentErrorFilter'];
+$sesion->textFilter = $_SESSION['textFilter'];
+$sesion->sinRespuestasFilter = $_SESSION['sinRespuestasFilter'];
+$sesion->favoritasFilter = $_SESSION['favoritasFilter'];
+$sesion->clasifPlusFilter = $_SESSION['clasifPlusFilter'];
+$sesion->bugFilter = $_SESSION['bugFilter'];
+$sesion->noExisteRespuestaFilter = $_SESSION['noExisteRespuestaFilter'];
+$sesion->idPreguntaClasificacionRespondidas = $_SESSION['idPreguntaClasificacionRespondidas'];
+$sesion->aciertosSession = $_SESSION['aciertosSession'];
+$sesion->erroresSession = $_SESSION['erroresSession'];
+$sesion->sinContestarSession = $_SESSION['sinContestarSession'];
+$sesion->listaErroresSession = $_SESSION['listaErroresSession'];
+
+$querySesion = "UPDATE tabUsuario SET sesionUsuario =  '" . json_encode($sesion) . "' WHERE id = " . $_SESSION["session_id_username"]; 
+mysqli_query($link, $querySesion);
+
+/***************************************************************************/
 
 echo json_encode($pregunta, JSON_INVALID_UTF8_SUBSTITUTE);
 

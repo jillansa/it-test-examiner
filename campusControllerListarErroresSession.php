@@ -8,7 +8,7 @@ require_once "campusConfig.php";
 
 $lista = $_SESSION['listaErroresSession'];
 
-//echo $lista. '<br>';
+echo $lista. '<br>';
 //exit;
 
 echo "<h1>LISTADO DE ERRORES EN LA SESION:</h1>";
@@ -48,39 +48,42 @@ foreach ($listaRespuesta as $respuesta)
         while ($row = mysqli_fetch_array($resultRespuestas))
         {      
             
-            
+            // Recorro las respuestas
+            // Si es la correcta, va de verde siempre. 
             if (boolval($row['correcta']) == true ){
-                echo "<div style='color: #40BF00;'>";
+                echo "<div style='color: #339800;'>";
                 echo "(*): ";
                 echo $row['texto'] . '</div>';
             } else {
+                // si no es la correcta, puede ir de rojo (si ha habido fallo) o negra si no se ha seleccionado. 
                 switch ($i) {
             
+                    // cada respuesta evaluamos si es la marcada por usario. 
                     case 0:
                         if ($respuestaSeleccionada == "A" ){
                             echo "<div style='color: #FF0000;'>";
-                        }
+                        } else {echo "<div style='color: #0a0a0a;'>";}
                         break;
                     case 1:
                         if ($respuestaSeleccionada == "B" ){
                             echo "<div style='color: #FF0000;'>";
-                        }
+                        } else {echo "<div style='color: #0a0a0a;'>";}
                         break;
                     case 2:
                         if ($respuestaSeleccionada == "C" ){
                             echo "<div style='color: #FF0000;'>";
-                        }
+                        } else {echo "<div style='color: #0a0a0a;'>";}
                         break;
                     case 3:
                         if ($respuestaSeleccionada == "D" ){
                             echo "<div style='color: #FF0000;'>";
-                        }
+                        } else {echo "<div style='color: #0a0a0a;'>";}
                         break;
-                    default:
-                        echo "<div>";
-                        break;
+                    /*default:
+                        echo "<div style='color: #0a0a0a;'>";
+                        break;*/
                 }
-                echo $row['texto'] . '</div>';
+                echo trim($row['texto']) . '</div>';
             }            
             $i++;    
         }

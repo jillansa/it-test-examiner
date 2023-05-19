@@ -48,7 +48,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 <?php include 'campusHeadIncludes.php';?>
 
   <body>
-	  
+
 	<script type="text/javascript">
 
 		var idPregunta = 0;
@@ -59,21 +59,12 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 		var idRespuestaC;
 		var idRespuestaD;
 		var sinContestarSession = false;
+		var acierto = 99;
 
 		$(function () { /* DOM ready */
 			$("#cursoCuerpoSelect").change(function() {		
 
 				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
-
-				temaSelect = document.getElementById('temaSelect');
-				temaSelect.options.length = 0;
-				temaSelectPregunta = document.getElementById('temaSelectPregunta');
-				if (temaSelectPregunta) {temaSelectPregunta.options.length = 0;}
-				$('#temaSelect').html('').append('');
-
-				ofertaSelect = document.getElementById('ofertaSelect');
-				ofertaSelect.options.length = 0;
-				$('#ofertaSelect').html('').append('');
 
 				examenSelect = document.getElementById('examenSelect');
 				examenSelect.options.length = 0;
@@ -86,35 +77,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				clasificacionSelect = document.getElementById('clasificacionSelect');
 				clasificacionSelect.options.length = 0;
 				$('#clasificacionSelect').html('').append('');				
-
-				temaSelectPregunta = document.getElementById('temaSelectPregunta');
-				if (temaSelectPregunta) {temaSelectPregunta.options.length = 0;}
-				$('#temaSelectPregunta').html('').append('');
-
-				//CARGAR OFERTA
-				$.ajax({
-					url: "campusControllerConsultarOferta.php",
-					method: "POST",
-					data: { cursoCuerpoSelect: cursoCuerpoSelect , tabOfertaCuerpoActiva : " in ('S') "},
-					success: function(dataresponse, statustext, response){
-						var data = JSON.parse(dataresponse);
-						
-						var select_option = '';
-						select_option += '<option value=""></option>';
-						// Load the new options
-						for (index = 0; index < data.length; ++index) {
-							option = data[index];							
-							select_option += '<option value="'+option.id+'">'+option.anio+' - '+option.administracion+ ' | ' +option.descripcion+'</option>';
-						}
-
-						$('#ofertaSelect').html('').append(select_option)
-						$('#ofertaSelect').prop('disabled', false);
-					},
-					error: function(request, errorcode, errortext){
-						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
-					}
-				});
-
 					
 				//CARGAR EXAMENES
 				$.ajax({
@@ -148,7 +110,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 				//CARGAR BLOQUES CLASIFICACION
 				$.ajax({
-					url: "campusControllerConsultarTemasOriginal.php",
+					url: "campusControllerConsultarTemas.php",
 					method: "POST",
 					data: { cursoCuerpoSelect: cursoCuerpoSelect },
 					success: function(dataresponse, statustext, response){
@@ -201,7 +163,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				
 				//CARGAR CLASIFICACION
 				$.ajax({
-					url: "campusControllerConsultarTemasOriginal.php",
+					url: "campusControllerConsultarTemas.php",
 					method: "POST",
 					data: { cursoCuerpoSelect: cursoCuerpoSelect, bloqueSelect: bloqueSelect },
 					success: function(dataresponse, statustext, response){
@@ -233,87 +195,9 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 		});
 
 
-		$(function () { /* DOM ready */
-			$("#ofertaSelect").change(function() {		
-
-				var ofertaSelect = $("#ofertaSelect").val();
-				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
-
-				temaSelect = document.getElementById('temaSelect');
-				temaSelect.options.length = 0;
-				$('#temaSelect').html('').append('');
-
-				$.ajax({
-					url: "campusControllerConsultarTemas.php",
-					method: "POST",
-					data: { cursoCuerpoSelect: cursoCuerpoSelect, ofertaSelect: ofertaSelect},
-					success: function(dataresponse, statustext, response){
-						var data = JSON.parse(dataresponse);
-
-						var select_option = '';
-						select_option += '<option value=""></option>';
-						// Load the new options
-						for (index = 0; index < data.length; ++index) {
-							option = data[index];
-							if (option.tipo == '1') {
-								select_option += '<optgroup label="'+ option.tema +'" value="'+option.id+'">'+option.tema+'</optgroup>';
-								select_option += '<option value="'+option.id+'">(+) '+option.tema+'</option>';
-							} else {
-								select_option += '<option value="'+option.id+'"> - '+option.tema+'</option>';
-							}
-						}
-
-						$('#temaSelect').html('').append(select_option)
-						$('#temaSelect').prop('disabled', false);						
-					},
-					error: function(request, errorcode, errortext){
-						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
-					}
-				});
-			
-			});
-		});
-
 
 		function updateGraphic(data){
-			/* Quitamos el CHART de CURSO */
-			/*if (data.aciertosCursoOferta != 0 || data.erroresCursoOferta != 0) {
-				$('#myChart1').show();
-				$('#estadisticasCursoOferta2').hide();
-				var xValues = ["Aciertos en el curso:", "Errores en el curso:"];
-				var yValues = [data.aciertosCursoOferta, data.erroresCursoOferta];
-				var barColors = [								
-					"#00aba9",
-					"#b91d47"];					
-
-				let chart1 = Chart.getChart("myChart1"); // <canvas> id
-				if (chart1 != undefined) {
-					chart1.destroy();
-				}
-
-				myChart1 = new Chart("myChart1", {
-				type: "doughnut",
-				data: {
-					labels: xValues,
-					datasets: [{
-					backgroundColor: barColors,
-					data: yValues
-					}]
-				},
-				options: {
-					title: {
-					display: true,
-					text: "Estadisticas por curso"
-					}
-				}
-				});
-			} else {
-				$('#estadisticasCursoOferta2').show();
-				$('#myChart1').hide();
-			}*/
-			/* Quitamos el CHART de CURSO */
-
-
+		
 			if (data.aciertosTema != 0 || data.erroresTema != 0) {
 				$('#myChart2').show();
 				$('#estadisticasTema2').hide();
@@ -350,48 +234,12 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				$('#myChart2').hide();
 			}	
 			
-			/* Sustituimos el CHART de PREGUNTA por un DIV */
-			//if (data.aciertosPregunta != 0 || data.erroresPregunta != 0) {
-				
-				//$('#estadisticasPregunta2').hide();
-				$('#estadisticasPregunta1').text("ACIERTOS: " + data.aciertosPregunta );
-				$('#estadisticasPregunta2').text("ERRORES: " + data.erroresPregunta);
+	
+			$('#estadisticasPregunta1').text("ACIERTOS: " + data.aciertosPregunta );
+			$('#estadisticasPregunta2').text("ERRORES: " + data.erroresPregunta);
 
-				/*$('#myChart3').show();
-				$('#estadisticasPregunta2').hide();
-				var xValues3 = ["Aciertos en la pregunta:", "Errores en la pregunta"];
-				var yValues3 = [data.aciertosPregunta, data.erroresPregunta];
-				var barColors = [								
-					"#00aba9",
-					"#b91d47"];					
 				
-				let chart3 = Chart.getChart("myChart3"); // <canvas> id
-				if (chart3 != undefined) {
-					chart3.destroy();
-				}
-
-				new Chart("myChart3", {
-				type: "doughnut",
-				data: {
-					labels: xValues3,
-					datasets: [{
-					backgroundColor: barColors,
-					data: yValues3
-					}]
-				},
-				options: {
-					title: {
-					display: true,
-					text: "Estadisticas por pregunta"
-					}
-				}
-				});		
-			} else {
-				$('#estadisticasPregunta2').show();
-				$('#myChart3').hide();*/
-			//}		
-			
-			if (data.aciertosSession != 0 || data.erroresSession != 0) {
+			if (data.aciertosSession != 0 || data.erroresSession != 0 || data.sinContestarSession) {
 				$('#myChart4').show();
 				$('#estadisticasSession2').hide();
 				var xValues3 = ["Aciertos en la sesión:", "Errores en la sesión", "Sin contestar"];
@@ -431,13 +279,14 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 		$(function () {
 			$("#siguienteBtn").click(function(evt){
-				evt.preventDefault();			
+				evt.preventDefault();	
+				
+				// SI NO HAY RESPUESTA, MARCAR PARA LISTADO 
+				comprobarRespuestaBtn(0);
 				
 				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
 				var bloqueSelect = $("#bloqueSelect").val();
 				var clasificacionSelect = $("#clasificacionSelect").val();
-				var temaSelect = $("#temaSelect").val();
-				var ofertaSelect = $("#ofertaSelect").val();
 				var examenSelect = $("#examenSelect").val();
 				var nivelSelect = $("#nivelSelect").val();
 				var percentErrorFilter = $("#percentErrorFilter").val();
@@ -467,14 +316,14 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					method: "POST",
 					data: { cursoCuerpoSelect: cursoCuerpoSelect, 
 						clasificacionSelect: clasificacionSelect, bloqueSelect: bloqueSelect,
-						temaSelect: temaSelect, 
-						ofertaSelect: ofertaSelect, examenSelect: examenSelect,
+						examenSelect: examenSelect,
 						nivelSelect: nivelSelect, idPreguntaClasificacion: idPreguntaClasificacion, percentErrorFilter: percentErrorFilter, 
 						textFilter: textFilter, sinRespuestasFilter: sinRespuestasFilter, favoritasFilter: favoritasFilter, 
 						clasifPlusFilter: clasifPlusFilter, bugFilter: bugFilter, noExisteRespuestaFilter: noExisteRespuestaFilter,
 						sinContestarSession: sinContestarSession},
 					success: function(dataresponse, statustext, response){
 						
+						acierto = 99;
 						sinContestarSession = false;
 						
 						var data = JSON.parse(dataresponse);
@@ -510,26 +359,31 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 								$('#rowRepuestaD').show();	
 							}
 
-						<?php } else { ?>					
+						<?php } else { ?>												
 							$('#preguntaTexto').text(data.texto);
+							//$('#preguntaTexto').html(data.texto.replace(/(\r\n|\r|\n)/g, '<br>'));
 
 							if (data.respuestaA != null){
 								$('#areaRespuestaA').text(data.respuestaA);
+								//$('#areaRespuestaA').html(data.respuestaA.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaA = data.idRespuestaA;
 								$('#rowRepuestaA').show();	
 							}
 							if (data.respuestaB != null){
 								$('#areaRespuestaB').text(data.respuestaB);
+								//$('#areaRespuestaB').html(data.respuestaB.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaB = data.idRespuestaB;
 								$('#rowRepuestaB').show();	
 							}
 							if (data.respuestaC != null){
 								$('#areaRespuestaC').text(data.respuestaC);
+								//$('#areaRespuestaC').html(data.respuestaC.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaC = data.idRespuestaC;
 								$('#rowRepuestaC').show();	
 							}
 							if (data.respuestaD != null){
 								$('#areaRespuestaD').text(data.respuestaD);
+								//$('#areaRespuestaD').html(data.respuestaD.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaD = data.idRespuestaD;
 								$('#rowRepuestaD').show();	
 							}
@@ -545,8 +399,8 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						$('#temaSelectPregunta').val(data.idClasificacion);						
 						$('#examenPregunta').text("EXAMEN: " + data.examen);
 						$('#fechaExamenPregunta').text("FECHA: " + data.fechaExamen);
-						$('#modalidadPregunta').text("MODALIDAD: " + data.modalidad);
-						$('#ofertaPregunta').text("OFERTA: " + data.oferta);
+						$('#modalidadExamenPregunta').text("MODALIDAD: " + data.modalidad);
+						$('#ofertaExamenPregunta').text("OFERTA: " + data.oferta);
 						$('#estadisticasCursoOfertaText').text(data.cuerpo);
 						$('#estadisticasTemaText').text(data.tema);
 
@@ -586,6 +440,8 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						
 						updateGraphic(data);
 
+						$('.js-example-basic-multiple').select2();
+
 					},
 					error: function(request, errorcode, errortext){
 						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
@@ -608,12 +464,10 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 		$(function () {
 			$("#buscarBtn").click(function(evt){
 				evt.preventDefault();
-
+				
 				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
 				var bloqueSelect = $("#bloqueSelect").val();
 				var clasificacionSelect = $("#clasificacionSelect").val();
-				var temaSelect = $("#temaSelect").val();
-				var ofertaSelect = $("#ofertaSelect").val();
 				var examenSelect = $("#examenSelect").val();
 				var nivelSelect = $("#nivelSelect").val();
 				var percentErrorFilter = $("#percentErrorFilter").val();
@@ -648,13 +502,13 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					method: "POST",
 					data: { cursoCuerpoSelect: cursoCuerpoSelect, 
 						clasificacionSelect: clasificacionSelect, bloqueSelect: bloqueSelect,
-						temaSelect: temaSelect, 
-						ofertaSelect: ofertaSelect, examenSelect: examenSelect,
+						examenSelect: examenSelect,
 						nivelSelect: nivelSelect, idPreguntaClasificacion: "0", percentErrorFilter: percentErrorFilter, 
 						textFilter: textFilter, sinRespuestasFilter: sinRespuestasFilter, favoritasFilter: favoritasFilter,
 						clasifPlusFilter: clasifPlusFilter, bugFilter: bugFilter, noExisteRespuestaFilter: noExisteRespuestaFilter},
 					success: function(dataresponse, statustext, response){
 						
+						acierto = 99;
 						sinContestarSession = false;
 						
 						var data = JSON.parse(dataresponse);						
@@ -692,24 +546,29 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 						<?php } else { ?>					
 							$('#preguntaTexto').text(data.texto);
+							//$('#preguntaTexto').html(data.texto.replace(/(\r\n|\r|\n)/g, '<br>'));
 
 							if (data.respuestaA != null){
 								$('#areaRespuestaA').text(data.respuestaA);
+								//$('#areaRespuestaA').html(data.respuestaA.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaA = data.idRespuestaA;
 								$('#rowRepuestaA').show();	
 							}
 							if (data.respuestaB != null){
 								$('#areaRespuestaB').text(data.respuestaB);
+								//$('#areaRespuestaB').html(data.respuestaB.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaB = data.idRespuestaB;
 								$('#rowRepuestaB').show();	
 							}
 							if (data.respuestaC != null){
 								$('#areaRespuestaC').text(data.respuestaC);
+								//$('#areaRespuestaC').html(data.respuestaC.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaC = data.idRespuestaC;
 								$('#rowRepuestaC').show();	
 							}
 							if (data.respuestaD != null){
 								$('#areaRespuestaD').text(data.respuestaD);
+								//$('#areaRespuestaD').html(data.respuestaD.replace(/(\r\n|\r|\n)/g, '<br>'));
 								idRespuestaD = data.idRespuestaD;
 								$('#rowRepuestaD').show();	
 							}
@@ -725,8 +584,8 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						$('#temaSelectPregunta').val(data.idClasificacion);						
 						$('#examenPregunta').text("EXAMEN: " + data.examen);
 						$('#fechaExamenPregunta').text("FECHA: " + data.fechaExamen);						
-						$('#modalidadPregunta').text("MODALIDAD: " + data.modalidad);
-						$('#ofertaPregunta').text("OFERTA: " + data.oferta);						
+						$('#modalidadExamenPregunta').text("MODALIDAD: " + data.modalidad);
+						$('#ofertaExamenPregunta').text("OFERTA: " + data.oferta);						
 						$('#estadisticasCursoOfertaText').text(data.cuerpo);
 						$('#estadisticasTemaText').text(data.tema);
 
@@ -765,6 +624,171 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						}
 
 						updateGraphic(data);
+
+						$('.js-example-basic-multiple').select2();
+						
+					},
+					error: function(request, errorcode, errortext){
+						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
+					}
+				});
+			});
+		});
+
+		
+		$(function () {
+			$("#cargarUltimaSesionBtn").click(function(evt){
+				evt.preventDefault();
+
+				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
+				
+				if (cursoCuerpoSelect == "") {
+					alert("El campo 'Cuerpo' es obligatorio para iniciar la sesion de tests");
+					return;
+				}
+				
+				$.ajax({
+					url: "campusControllerSiguientePregunta.php",
+					method: "POST",
+					data: { recuperarSesion: 1},
+					success: function(dataresponse, statustext, response){
+						
+						acierto = 99;
+						sinContestarSession = false;
+						
+						var data = JSON.parse(dataresponse);						
+						$("#statusConsole").html("<p>" + data.metadatos + "</p>");
+						$("#estadisticasContainer").show();
+
+						console.log(data.sql);
+
+						/*
+						POSICIONAR COMBOS y LISTAS ¿?
+						*/
+						/*
+						var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
+						var bloqueSelect = $("#bloqueSelect").val();
+						var clasificacionSelect = $("#clasificacionSelect").val();
+						var examenSelect = $("#examenSelect").val();
+						var nivelSelect = $("#nivelSelect").val();
+						var percentErrorFilter = $("#percentErrorFilter").val();
+						var textFilter = $("#textFilter").val();
+						var sinRespuestasFilter = $("#sinRespuestasFilter").prop('checked');
+						var clasifPlusFilter = $("#clasifPlusFilter").prop('checked');	
+						var bugFilter = $("#bugFilter").prop('checked');	
+						var noExisteRespuestaFilter = $("#noExisteRespuestaFilter").prop('checked');
+						var favoritasFilter = $("#favoritasFilter").prop('checked');*/
+
+						// CARGAR PREGUNTAS
+						<?php			
+							session_start();
+							if($_SESSION["session_username"] == "jillansa") {
+						?>	
+							$("#preguntaTexto").val(data.texto);
+							
+							if (data.respuestaA != null){
+								$('#areaRespuestaA').val(data.respuestaA);
+								idRespuestaA = data.idRespuestaA;
+								$('#rowRepuestaA').show();	
+							}
+							if (data.respuestaB != null){
+								$('#areaRespuestaB').val(data.respuestaB);
+								idRespuestaB = data.idRespuestaB;
+								$('#rowRepuestaB').show();	
+							}
+							if (data.respuestaC != null){
+								$('#areaRespuestaC').val(data.respuestaC);
+								idRespuestaC = data.idRespuestaC;
+								$('#rowRepuestaC').show();	
+							}
+							if (data.respuestaD != null){
+								$('#areaRespuestaD').val(data.respuestaD);
+								idRespuestaD = data.idRespuestaD;
+								$('#rowRepuestaD').show();	
+							}
+
+						<?php } else { ?>												
+							$('#preguntaTexto').text(data.texto);
+							//$('#preguntaTexto').html(data.texto.replace(/(\r\n|\r|\n)/g, '<br>'));
+
+							if (data.respuestaA != null){
+								$('#areaRespuestaA').text(data.respuestaA);
+								//$('#areaRespuestaA').html(data.respuestaA.replace(/(\r\n|\r|\n)/g, '<br>'));
+								idRespuestaA = data.idRespuestaA;
+								$('#rowRepuestaA').show();	
+							}
+							if (data.respuestaB != null){
+								$('#areaRespuestaB').text(data.respuestaB);
+								//$('#areaRespuestaB').html(data.respuestaB.replace(/(\r\n|\r|\n)/g, '<br>'));
+								idRespuestaB = data.idRespuestaB;
+								$('#rowRepuestaB').show();	
+							}
+							if (data.respuestaC != null){
+								$('#areaRespuestaC').text(data.respuestaC);
+								//$('#areaRespuestaC').html(data.respuestaC.replace(/(\r\n|\r|\n)/g, '<br>'));
+								idRespuestaC = data.idRespuestaC;
+								$('#rowRepuestaC').show();	
+							}
+							if (data.respuestaD != null){
+								$('#areaRespuestaD').text(data.respuestaD);
+								//$('#areaRespuestaD').html(data.respuestaD.replace(/(\r\n|\r|\n)/g, '<br>'));
+								idRespuestaD = data.idRespuestaD;
+								$('#rowRepuestaD').show();	
+							}
+
+						<?php
+							}
+						?>
+
+						idPregunta = data.idPregunta;
+						idPreguntaClasificacion = data.idPreguntaClasificacion;
+						$('#idPregunta').text("ID: " + data.idPregunta);
+						$('#temaPregunta').text("CLASIFICACION: " + data.tema);						
+						$('#temaSelectPregunta').val(data.idClasificacion);						
+						$('#examenPregunta').text("EXAMEN: " + data.examen);
+						$('#fechaExamenPregunta').text("FECHA: " + data.fechaExamen);						
+						$('#modalidadExamenPregunta').text("MODALIDAD: " + data.modalidad);
+						$('#ofertaExamenPregunta').text("OFERTA: " + data.oferta);						
+						$('#estadisticasCursoOfertaText').text(data.cuerpo);
+						$('#estadisticasTemaText').text(data.tema);
+
+						if (data.link){			
+							$('#pop').show();
+							$('#imageresource').attr('src',data.link);
+						} else {
+							$('#pop').hide();	
+							$('#imageresource').attr('src',data.link);
+						}
+
+						$('#numeroPregunta').text("Quedan " + data.numTotalPreguntas + " preguntas   ");
+
+						if (data.numTotalPreguntas <= 0) {
+							$('#siguienteBtn').prop("disabled",true);
+						} else {
+							$('#siguienteBtn').prop("disabled",false);
+						}
+						
+						if (data.numTotalPreguntas >= 0 ) {
+							$("#preguntaContainer").show();
+							$("#preguntaContainerNoData").hide();
+						} else {
+							$("#preguntaContainer").hide();
+							$("#preguntaContainerNoData").show();	
+						}
+						
+						respuestaCorrecta = data.respuestaCorrecta;						
+												
+						if (data.favorita > 0) {
+							$('#favoritaOnToOffBtn').show();	
+							$('#favoritaOffToOnBtn').hide();
+						} else {
+							$('#favoritaOffToOnBtn').show();
+							$('#favoritaOnToOffBtn').hide();	
+						}
+
+						updateGraphic(data);
+
+						$('.js-example-basic-multiple').select2();
 						
 					},
 					error: function(request, errorcode, errortext){
@@ -795,12 +819,11 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 			});
 		});
 
-		
-		$(function () {
-			$("#comprobarRespuestaBtn").click(function(evt){
-				evt.preventDefault();
-				sinContestarSession = true;
-						
+
+		function comprobarRespuestaBtn(flagComprobar){
+
+			// COMPROBAR
+			if (flagComprobar == 1) {
 				//var respuesta = document.getElementById('respuesta').value;
 				var respuesta = document.querySelector('input[name="respuesta"]:checked').value;
 				var idUsuario = <?php echo json_encode($_SESSION["session_id_username"]); ?>;
@@ -809,37 +832,70 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					alert("No hay ninguna respuesta correcta");
 					return;	
 				}
+				// si hay respuesta 
+				if (respuesta != '') {
 
-				if (respuestaCorrecta == respuesta) {
-					var acierto = 1;
+					if (respuestaCorrecta == respuesta) {
+						acierto = 1;
+						$.ajax({
+							url: "campusControllerInsertarRespuestaUsuario.php",
+							method: "POST",
+							data: { idPregunta: idPregunta, idUsuario: idUsuario, acierto: acierto, respuestaCorrecta: respuestaCorrecta, respuesta: respuesta}, // 1=true , 0=false 
+							success: function(dataresponse, statustext, response){
+								alert("Respuesta correcta");
+							},
+							error: function(request, errorcode, errortext){
+								$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
+							}
+						});						
+
+					} else {
+						acierto = 0;
+						$.ajax({
+							url: "campusControllerInsertarRespuestaUsuario.php",
+							method: "POST",
+							data: { idPregunta: idPregunta, idUsuario: idUsuario, acierto: acierto, respuestaCorrecta: respuestaCorrecta, respuesta: respuesta}, // 1=true , 0=false 
+							success: function(dataresponse, statustext, response){
+								alert("Respuesta Incorrecta");
+							},
+							error: function(request, errorcode, errortext){
+								$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
+							}
+						});					
+
+					}	
+
+				} 
+				
+			
+			}	
+
+			// SIGUIENTE y no ha habido ya ninguna respuesta
+			if (flagComprobar == 0 && acierto == 99) {
+				//var acierto = 99;
+				var respuesta = 0;
 					$.ajax({
 						url: "campusControllerInsertarRespuestaUsuario.php",
 						method: "POST",
 						data: { idPregunta: idPregunta, idUsuario: idUsuario, acierto: acierto, respuestaCorrecta: respuestaCorrecta, respuesta: respuesta}, // 1=true , 0=false 
 						success: function(dataresponse, statustext, response){
-							alert("Respuesta correcta");
+							//alert("Respuesta Incorrecta");
 						},
 						error: function(request, errorcode, errortext){
 							$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
 						}
-					});						
+					});				
+			
+			}
+		}
 
-				} else {
-					var acierto = 0;
-					$.ajax({
-						url: "campusControllerInsertarRespuestaUsuario.php",
-						method: "POST",
-						data: { idPregunta: idPregunta, idUsuario: idUsuario, acierto: acierto, respuestaCorrecta: respuestaCorrecta, respuesta: respuesta}, // 1=true , 0=false 
-						success: function(dataresponse, statustext, response){
-							alert("Respuesta Incorrecta");
-						},
-						error: function(request, errorcode, errortext){
-							$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
-						}
-					});	
-					
-
-				}		
+		$(function () {
+			$("#comprobarRespuestaBtn").click(function(evt){
+				evt.preventDefault();
+				sinContestarSession = true;
+				
+				comprobarRespuestaBtn(1);
+				
 
 			});
 		});
@@ -880,6 +936,11 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				});	
 			});
 		});
+
+
+		$(document).ready(function() {
+			$('.js-example-basic-multiple').select2();
+		});
 			
 	</script>
 	  
@@ -908,7 +969,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					<div class="row">
 						<div class="col-sm-3">	
 																			
-							<label for="cursoCuerpoSelect">Cuerpo (*):</label><br>
+							<label for="cursoCuerpoSelect">Curso (*):</label><br>
 							<!-- Se deben mostrar solo los cursos para los que el usuario esta matriculado (activo) -->						
 							<select name="cursoCuerpoSelect" id="cursoCuerpoSelect" style="width: 80%;">
 								<option value=""></option>
@@ -931,7 +992,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 						<div class="col-sm-3">					
 							<!-- Se deben mostrar el listado de temas de curso indicado -->
-							<label for="clasificacionSelect">Clasificacion:</label><br>	
+							<label for="clasificacionSelect">TEMA:</label><br>	
 							<select class="selectGroup" name="clasificacionSelect" id="clasificacionSelect" style="width: 80%;" disabled>
 								<option value=""></option>  
 							</select>					
@@ -940,29 +1001,9 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					</div>
 
 					<div class="row">	
-						<div class="col-sm-3">					
-							<!-- Se deben mostrar el listado de temas de curso indicado -->
-							<label for="ofertaSelect">Oferta:</label><br>	
-							<select class="selectGroup" name="ofertaSelect" id="ofertaSelect" style="width: 80%;" disabled>
-								<option value=""></option>  
-							</select>					
-						</div>
-
-						<div class="col-sm-6">					
-							<!-- Se deben mostrar el listado de temas de curso indicado -->
-							<label for="temaSelect">Tema:</label><br>	
-							<select class="selectGroup" name="temaSelect" id="temaSelect" style="width: 80%;" disabled>
-								<option value=""></option>  
-							</select>					
-						</div>	
-
-	
-					</div>
-
-					<div class="row">	
 						<div class="col-sm-3">
 							<!--<div class="form-group mb-5">-->
-								<label for="textFilter">Texto a buscar:</label><br>
+								<label for="textFilter">Id/Texto a buscar:</label><br>
 								<input id="textFilter" type="text" class="" placeholder="Search text" name="textFilter" style="width: 80%;">										
 							<!--</div>-->
 						</div>
@@ -981,7 +1022,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 						<div class="col-sm-6">					
 							<!-- Se deben mostrar el listado de temas de curso indicado -->
-							<label for="examenSelect">Examenes del cuerpo:</label><br>	
+							<label for="examenSelect">Examenes del curso:</label><br>	
 							<select class="selectGroup" name="examenSelect" id="examenSelect" style="width: 80%;" disabled>
 								<option value=""></option>  
 							</select>					
@@ -1045,6 +1086,26 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 							<i class="fa fa-search" aria-hidden="true"></i>
 							Buscar
 						</button>
+
+						<button id="listadoBtn" 
+							formaction="campusControllerListar.php"
+							formtarget="_blank"
+							type="submit" 
+							class="btn btn-secondary" 
+							aria-label="Right Align">				
+								<i class="fa fa-print" aria-hidden="true"></i>
+								Generar Listado
+						</button>
+
+						<button id="cargarUltimaSesionBtn" 
+							type="submit" 
+							class="btn btn-secondary" 
+							aria-label="Right Align">				
+							<i class="fa fa-download" aria-hidden="true"></i>
+								Cargar Ult. Sesion
+						</button>
+
+
 					</div>
 					<br>
 				</div>
@@ -1061,7 +1122,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 										<script>
 
-											function favoritaBtn(bFavorita){													
+											function fnFavoritaBtn(bFavorita){													
 														
 												var idUsuario = <?php echo json_encode($_SESSION["session_id_username"]); ?>;
 												$.ajax({
@@ -1091,7 +1152,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 												}
 
 
-												function dudaErrorBtn(){													
+												function fnDudaErrorBtn(){													
 														
 														var idUsuario = <?php echo json_encode($_SESSION["session_id_username"]); ?>;
 														$.ajax({
@@ -1109,7 +1170,80 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 															});
 		
 															return;
-														}												
+														}		
+														
+													function fnPreguntaCorreoBtn(){													
+														
+														var idUsuario = <?php echo json_encode($_SESSION["session_id_username"]); ?>;
+
+														idPregunta = $('#idPregunta').text();
+														
+														examenPregunta = $('#examenPregunta').text();
+														fechaExamenPregunta = $('#fechaExamenPregunta').text();
+														modalidadExamenPregunta = $('#modalidadExamenPregunta').text();
+														ofertaExamenPregunta = $('#ofertaExamenPregunta').text();
+
+														<?php			
+															session_start();
+															if($_SESSION["session_username"] == "jillansa") {
+														?>	
+															// al ser HTML input lo cogemos de val()
+															temaPregunta = "CLASIFICACION: " + $('select[name=temaSelectPregunta] option:selected').text();															
+															preguntaTexto = $('#preguntaTexto').val();
+															respuestaTxtA = $('#areaRespuestaA').val();
+															respuestaTxtB = $('#areaRespuestaB').val();
+															respuestaTxtC = $('#areaRespuestaC').val();
+															respuestaTxtD = $('#areaRespuestaD').val();					
+														
+														<?php			
+															} else {
+														?>	
+															// al ser HTML div lo cogemos de text()
+															temaPregunta = $('#temaPregunta').text();
+															preguntaTexto = $('#preguntaTexto').text();
+															respuestaTxtA = $('#areaRespuestaA').text();
+															respuestaTxtB = $('#areaRespuestaB').text();
+															respuestaTxtC = $('#areaRespuestaC').text();
+															respuestaTxtD = $('#areaRespuestaD').text();		
+														<?php			
+															}
+														?>	
+
+														estadisticaAciertosPregunta = $('#estadisticasPregunta1').text();
+														estadisticaErroresPregunta = $('#estadisticasPregunta2').text();
+
+														//alert("ENVIO DE CORREO:" + idPregunta + " / " + temaPregunta + " / " + examenPregunta + " / " + fechaExamenPregunta + " / " + modalidadExamenPregunta + " / " + ofertaExamenPregunta + " / " + preguntaTexto + " / " + respuestaTxtA + " / " + respuestaTxtB + " / " + respuestaTxtC + " / " + respuestaTxtD + " / " + estadisticaAciertosPregunta + " / " + estadisticaErroresPregunta);
+														
+														//return;
+
+														$.ajax({
+																url: "campusControllerCorreoPregunta.php",
+																method: "POST",
+																data: { idPregunta: idPregunta, 
+																	idUsuario: idUsuario,
+																	examenPregunta: examenPregunta,
+																	fechaExamenPregunta: fechaExamenPregunta,
+																	modalidadExamenPregunta: modalidadExamenPregunta,
+																	ofertaExamenPregunta: ofertaExamenPregunta, 
+																	temaPregunta: temaPregunta, 
+																	preguntaTexto: preguntaTexto,
+																	respuestaTxtA: respuestaTxtA,
+																	respuestaTxtB: respuestaTxtB, 
+																	respuestaTxtC: respuestaTxtC, 
+																	respuestaTxtD: respuestaTxtD,
+																	estadisticaAciertosPregunta: estadisticaAciertosPregunta, 
+																	estadisticaErroresPregunta: estadisticaErroresPregunta
+																},
+																success: function(dataresponse, statustext, response){
+																							
+																},
+																error: function(request, errorcode, errortext){
+																	$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
+																}
+															});
+		
+															return;
+														}		
 													
 										</script>				
 														
@@ -1127,23 +1261,31 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 												<div class="col-sm-1">
 													<button id="favoritaOnToOffBtn" style="display:none"
 														title="Marcar como favorita"
-														type="button" onclick="favoritaBtn('N');return false;"
+														type="button" onclick="fnFavoritaBtn('N');return false;"
 														class="btn btn-primary float-right">
 														<i class="fa fa-star"></i>
 													</button>
 													<button id="favoritaOffToOnBtn" style="display:none"
 														title="Marcar como favorita"
-														type="button" onclick="favoritaBtn('S');return false;"
+														type="button" onclick="fnFavoritaBtn('S');return false;"
 														class="btn btn-outline-primary float-right">												
 														<i class="fa fa-star"></i>
 													</button>
 												</div>	
 												<div class="col-sm-1">
-													<button id="favoritaOnToOffBtn"
+													<button id="dudaErrorBtn"
 														title="Reportar DUDA/ERROR en la pregunta"
-														type="button" onclick="dudaErrorBtn();return false;"
+														type="button" onclick="fnDudaErrorBtn();return false;"
 														class="btn btn-outline-primary float-right">	
 														<i class="fa fa-bug" aria-hidden="true"></i>
+													</button>														
+												</div>	
+												<div class="col-sm-1">
+													<button id="preguntaCorreoBtn"
+														title="Enviar pregunta por correo"
+														type="button" onclick="fnPreguntaCorreoBtn();return false;"
+														class="btn btn-outline-primary float-right">	
+														<i class="fa fa-envelope" aria-hidden="true"></i>
 													</button>														
 												</div>	
 											</div>	
@@ -1154,13 +1296,15 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 												<div class="col-sm-1 infoPregunta" id="idPregunta"></div>
 												<?php			
 													session_start();
+
 													if($_SESSION["session_username"] == "jillansa") {
 												?>	
 													<div class="col-sm-3 infoPregunta">
-														<label for="temaSelectPregunta">CLASIFICACION:</label><br>	
-														<select class="selectGroup" name="temaSelectPregunta" multiple="multiple"
-														id="temaSelectPregunta" size="5" style="width:100%;height: 100%;">															
-														</select>				
+														<label for="temaSelectPregunta">TEMA:</label><br>	
+
+														<select class="js-example-basic-multiple" multiple="multiple"
+														    name="temaSelectPregunta" id="temaSelectPregunta" style="width: 100%;">																																						      
+														</select>
 													</div>	
 												
 												<?php } else { ?>
@@ -1173,8 +1317,8 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 												<div class="col-sm-2 infoPregunta" id="examenPregunta"></div>					
 												<div class="col-sm-2 infoPregunta" id="fechaExamenPregunta"></div>
-												<div class="col-sm-2 infoPregunta" id="modalidadPregunta"></div>			
-												<div class="col-sm-2 infoPregunta" id="ofertaPregunta"></div>
+												<div class="col-sm-2 infoPregunta" id="modalidadExamenPregunta"></div>			
+												<div class="col-sm-2 infoPregunta" id="ofertaExamenPregunta"></div>
 														
 											</div>
 
@@ -1191,7 +1335,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 												
 													<?php } else { ?>
 												
-														<div name="preguntaTexto" id="preguntaTexto"></div>
+														<div name="preguntaTexto" id="preguntaTexto" class="divPreWrap"></div>
 												
 													<?php
 														}
@@ -1259,7 +1403,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 														<textarea class="form-control z-depth-1" name="areaRespuestaA" id="areaRespuestaA" rows="4"></textarea>
 													<?php } else { ?>
 												
-														<div name="areaRespuestaA" id="areaRespuestaA"></div>
+														<div name="areaRespuestaA" id="areaRespuestaA" class="divPreWrap"></div>
 												
 													<?php
 														}
@@ -1276,7 +1420,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 														<textarea class="form-control z-depth-1" name="areaRespuestaB" id="areaRespuestaB" rows="4"></textarea>
 													<?php } else { ?>
 												
-														<div name="areaRespuestaB" id="areaRespuestaB"></div>
+														<div name="areaRespuestaB" id="areaRespuestaB" class="divPreWrap"></div>
 												
 													<?php
 														}
@@ -1293,7 +1437,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 														<textarea class="form-control z-depth-1" name="areaRespuestaC" id="areaRespuestaC" rows="4"></textarea>
 													<?php } else { ?>
 												
-														<div name="areaRespuestaC" id="areaRespuestaC"></div>
+														<div name="areaRespuestaC" id="areaRespuestaC" class="divPreWrap"></div>
 												
 													<?php
 														}
@@ -1310,7 +1454,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 														<textarea class="form-control z-depth-1" name="areaRespuestaD" id="areaRespuestaD" rows="4"></textarea>
 													<?php } else { ?>
 												
-														<div name="areaRespuestaD" id="areaRespuestaD"></div>
+														<div name="areaRespuestaD" id="areaRespuestaD" class="divPreWrap"></div>
 												
 													<?php
 														}
@@ -1404,7 +1548,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 											<br><hr><br>	
 
-											<b><div id="estadisticasTema">CLASIFICACION:</div></b>
+											<b><div id="estadisticasTema">TEMA:</div></b>
 											<div id="estadisticasTemaText"></div>
 											<div id="estadisticasTema2">Sin datos para mostrar</div>
 											<canvas id="myChart2" style="width:100%;max-width:600px"></canvas>
