@@ -83,7 +83,7 @@ if ($_POST["recuperarSesion"] == "1") {
     $bloque = $_POST["bloqueSelect"];
     $clasificacion = $_POST["clasificacionSelect"];
     $examen = $_POST["examenSelect"];
-    $nivel = $_POST["nivelSelect"];
+    //$nivel = $_POST["nivelSelect"];
     $percentErrorFilter = $_POST["percentErrorFilter"];
     $textFilter = $_POST["textFilter"];
     $sinRespuestasFilter = $_POST["sinRespuestasFilter"];
@@ -99,7 +99,7 @@ if ($_POST["recuperarSesion"] == "1") {
     $_SESSION["bloqueSelect"] = $bloque;
     $_SESSION["clasificacionSelect"] = $clasificacion;
     $_SESSION["examenSelect"] = $examen;
-    $_SESSION["nivelSelect"] = $nivel;
+    //$_SESSION["nivelSelect"] = $nivel;
     $_SESSION["percentErrorFilter"] = $percentErrorFilter;
     $_SESSION["textFilter"] = $textFilter;
     $_SESSION["sinRespuestasFilter"] = $sinRespuestasFilter;
@@ -116,7 +116,7 @@ if ($_POST["recuperarSesion"] == "1") {
     $bloque = $_SESSION["bloqueSelect"];
     $clasificacion = $_SESSION["clasificacionSelect"];
     $examen = $_SESSION["examenSelect"];
-    $nivel = $_SESSION["nivelSelect"];
+    //$nivel = $_SESSION["nivelSelect"];
     $percentErrorFilter = $_SESSION["percentErrorFilter"];
     $textFilter = $_SESSION["textFilter"];
     $sinRespuestasFilter = $_SESSION["sinRespuestasFilter"];
@@ -139,12 +139,14 @@ if ($_POST["recuperarSesion"] == "1") {
 
 
 
-//TODO: idea, a nivel de test, una pregunta puede estar vinculada a 3 temas, seria como 3 preguntas, pero a nivel de tabPregunta solo esta 1 vez, a nivel de estadisticas solo 1 vez, pero a nivel de tema, la preguna puede aparece 3 veces en el buscador, ya que esta "duplicada" digamos para 3 temas. 
+//TODO: idea, a nivel de test, una pregunta puede estar vinculada a 3 temas, seria como 3 preguntas, 
+// pero a nivel de tabPregunta solo esta 1 vez, a nivel de estadisticas solo 1 vez, pero a nivel de tema, 
+// la preguna puede aparece 3 veces en el buscador, ya que esta "duplicada" digamos para 3 temas. 
 
 
 // FILTRO DE CURSO (este filtro obligatorio), 
 $queryPregunta = "SELECT RAND() as random, p.id, p.texto, pc.id as idPreguntaClasificacion, pc.idClasificacion, co.tema, e.descripcion as examen, e.modalidad,
-IFNULL((select concat(o.descripcion,' ', o.anio) from tabOferta o where e.idOferta = o.id),'') as oferta, e.fecha_examen, 
+IFNULL(concat(e.administracion,' ', e.anioConvocatoria),'') as oferta, e.fecha_examen, 
 c.descripcion as cuerpo,
 i.link
 FROM tabPreguntas p
@@ -185,12 +187,12 @@ if (isset($examen) && $examen!= null && $examen!= "") {
 
 
 // FILTRO DE NIVEL
-if (isset($nivel) && $nivel!= null && $nivel!= "") {
+/*if (isset($nivel) && $nivel!= null && $nivel!= "") {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Nivel Filter ON ";
     $queryPregunta = $queryPregunta . " AND p.nivel = '" . $nivel . "' ";
 } else {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Nivel Filter OFF ";
-}
+}*/
 
 
 // FILTRO DE TEXTO
