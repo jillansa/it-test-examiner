@@ -13,22 +13,29 @@ $bloqueSelect = $_POST["bloqueSelect"];
 // Include config environment file
 require_once "campusConfig.php";
 
-$queryClasificacion = "SELECT distinct tco.id as id, tco.tema, tco.bloque, tco.tipo
-FROM tabClasificacion tco ";
+$queryClasificacion = "SELECT distinct 
+tco.bloque, tco2.id, tco2.tema, tco2.tipo
+FROM tabClasificacion tco, tabClasificacion tco2 ";
 
 if ($cursoCuerpoSelect <> "") {
     $queryClasificacion = $queryClasificacion . " , tabClasificacionCuerpo tcoc 
-    WHERE tcoc.idClasificacion = tco.id 
+    WHERE 1 = 1
+    AND tcoc.idClasificacion = tco2.id 
     AND tcoc.idCuerpo = " . $cursoCuerpoSelect . " "; 
 } else {
     $queryClasificacion = $queryClasificacion . " WHERE 1 = 1 ";
 }
 
+$queryClasificacion = $queryClasificacion . "
+AND tco.tipo = 1
+AND tco2.idBloque = tco.id ";
+
+
 if ($bloqueSelect <> "") {
-    $queryClasificacion = $queryClasificacion . " AND tco.idBloque = " . $bloqueSelect . " "; 
+    $queryClasificacion = $queryClasificacion . " AND tco2.idBloque = " . $bloqueSelect . " "; 
 } 
 
-$queryClasificacion = $queryClasificacion . "ORDER BY tco.orden ASC, tco.bloque ASC, tco.tipo DESC, tco.tema ASC";
+$queryClasificacion = $queryClasificacion . "ORDER BY tco.orden ASC, tco2.tema ASC";
 
 //printf($queryExamenes);
 //exit;

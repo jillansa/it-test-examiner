@@ -14,16 +14,8 @@ if(!($_SESSION["session_username"] == "jillansa")) {
 	exit;
 }
 
-$queryCuerpo = "SELECT id, descripcion, nivel FROM tabCuerpo WHERE activa= 'S' ORDER BY nivel, descripcion ASC";
+$queryCuerpo = "SELECT id, descripcion, nivel FROM tabCuerpo WHERE activa= 'S' ORDER BY orden asc, nivel, descripcion ASC";
 $resultCuerpo = mysqli_query($link, $queryCuerpo);
-$resultCuerpo2 = mysqli_query($link, $queryCuerpo);
-//printf("Select returned resultCuerpo %d rows.\n", mysqli_num_rows($resultCuerpo));
-
-
-$queryOferta = "SELECT o.id, a.nombre, o.descripcion FROM tabOferta o LEFT JOIN tabAdministracion a
-	 ON o.idAdministracion = a.id ORDER BY o.anio desc, a.nombre ASC";
-$resultOferta = mysqli_query($link, $queryOferta);
-
 
 $queryExamen = "SELECT id, descripcion, fecha_examen, modalidad FROM tabExamen ORDER BY fecha_examen desc, descripcion ASC";
 $resultExamen = mysqli_query($link, $queryExamen);
@@ -142,13 +134,16 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 				var descripcionExamen = $("#descripcionExamen").val();
 				var fechaExamen = $("#fechaExamen").val();
 				var modalidadExamen = $("#modalidadExamen").val();
-				var ofertaModalSelect = $("#ofertaModalSelect").val();
-				
+				var anioOfertaExamen = $("#anioOfertaExamen").val();
+				var ofertaExamen = $("#ofertaExamen").val();
+				var entidadExamen = $("#entidadExamen").val();
+								
 				$.ajax({
 						url: "campusControllerExamen.php",
 						method: "POST",
 						data: { cursoCuerpoSelect2: cursoCuerpoSelect2, descripcionExamen: descripcionExamen, fechaExamen: fechaExamen, 
-							modalidadExamen: modalidadExamen, ofertaModalSelect: ofertaModalSelect,
+							modalidadExamen: modalidadExamen, anioOfertaExamen: anioOfertaExamen,
+							ofertaExamen: ofertaExamen, entidadExamen: entidadExamen,
 							modo: 'ALTA'},
 						success: function(dataresponse, statustext, response){
 						
@@ -207,38 +202,7 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 					<br>
 
 					<div class="row">
-						<div class="col-sm-3">	
-																			
-							<label for="cursoCuerpoSelect">Cuerpo (*):</label><br>
-							<!-- Se deben mostrar solo los cursos para los que el usuario esta matriculado (activo) -->						
-							<select name="cursoCuerpoSelect" id="cursoCuerpoSelect" style="width: 80%;">
-								<option value=""></option>
-								<?php 
-								while ($row = mysqli_fetch_array($resultCuerpo))
-								{
-									echo "<option value=".$row['id'].">".$row['descripcion']." | ".$row['nivel']."</option>";
-
-								}
-								?>        
-							</select>
-						</div>
 						
-						
-						<div class="col-sm-3">					
-							<!-- Se deben mostrar el listado de temas de curso indicado -->
-							<label for="ofertaSelect">Oferta:</label><br>	
-							<select class="selectGroup" name="ofertaSelect" id="ofertaSelect" style="width: 80%;">
-								<option value=""></option> 
-								<?php 
-								while ($row = mysqli_fetch_array($resultOferta))
-								{
-									echo "<option value=".$row['id'].">".$row['nombre']." | ".$row['descripcion']."</option>";
-
-								}
-								?>   
-							</select>					
-						</div>
-
 						<div class="col-sm-3">					
 							<!-- Se deben mostrar el listado de temas de curso indicado -->
 							<label for="examenSelect">Examen:</label><br>	
@@ -283,12 +247,12 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 
 						<div class="row">
 							<div class="col-sm-3">																				
-								<label for="cursoCuerpoSelect2">Cuerpo:</label><br>
+								<label for="cursoCuerpoSelect2">Curso:</label><br>
 								<!-- Se deben mostrar solo los cursos para los que el usuario esta matriculado (activo) -->						
 								<select name="cursoCuerpoSelect2" id="cursoCuerpoSelect2" style="width: 80%;">
 									<option value=""></option>
 									<?php 
-									while ($row = mysqli_fetch_array($resultCuerpo2))
+									while ($row = mysqli_fetch_array($resultCuerpo))
 									{
 										echo "<option value=".$row['id'].">".$row['descripcion']." | ".$row['nivel']."</option>";
 
@@ -296,9 +260,13 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 									?>        
 								</select>
 							</div>
-							<div class="col-sm-6">																			
-								<label for="descripcionExamen">Descripcion:</label><br>
+							<div class="col-sm-4">																			
+								<label for="descripcionExamen">Descripcion examen:</label><br>
 								<input id="descripcionExamen" name="descripcionExamen" type="text" required="true" placeholder="Descripcion">
+							</div>
+							<div class="col-sm-3">																			
+								<label for="modalidadExamen">Modalidad:</label><br>
+								<input id="modalidadExamen" name="modalidadExamen" type="text" required="true" placeholder="PI/LI/ESTABILIZACION">
 							</div>
 						</div>
 						<div class="row">								
@@ -309,23 +277,30 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 							</div>
 
 							<div class="col-sm-3">																			
-									<label for="modalidadExamen">Modalidad Examen:</label><br>
-									<input id="modalidadExamen" name="modalidadExamen" type="text" required="true" placeholder="(LIBRE/CONSOLIDACION/PI)">
+									<label for="anioOfertaExamen">Año Convocatoria:</label><br>
+									<input id="anioOfertaExamen" name="anioOfertaExamen" type="text" required="true" placeholder="2020">
 							</div>
 
-							<div class="col-sm-6">																			
-								<label for="ofertaModalSelect">Oferta:</label><br>
-								<select name="ofertaModalSelect" id="ofertaModalSelect" required="true" style="width: 80%;">
-								<option value=""></option> 
-								<?php 
-								while ($row = mysqli_fetch_array($resultOferta))
-								{
-									echo "<option value=".$row['id'].">".$row['nombre']." | ".$row['descripcion']."</option>";
-
-								}
-								?>  
-								</select>	
+							<div class="col-sm-3">																			
+								<label for="ofertaExamen">Entidad:</label><br>
+								<input id="ofertaExamen" name="ofertaExamen" type="text" required="true" placeholder="AGE">
 							</div>
+							
+							<div class="col-sm-3">																			
+								<label for="entidadExamen">Tipo Entidad:</label><br>						
+							
+								<select name="entidadExamen" id="entidadExamen">
+									<option value=""></option>
+									<option value="AGE">AGE</option>
+									<option value="CCAA">CCAA</option>
+									<option value="AYTO">AYTO</option>
+									<option value="Certificacion">Certificacion</option>
+									<option value="Curso">Curso</option>
+								</select>
+
+							
+							</div>
+
 						</div>
 
 						<button id="crearExamenBtn" type="button" class="btn btn-primary pull-right" aria-label="Left Align">

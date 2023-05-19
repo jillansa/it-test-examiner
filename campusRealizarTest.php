@@ -29,7 +29,7 @@ if($_SESSION["active"] != 'S' && $_SESSION["trial_days"] > 1){
 // Include config environment file
 require_once "campusConfig.php";
 
-$queryCuerpo = "SELECT id, descripcion, nivel FROM tabCuerpo WHERE activa= 'S' ORDER BY nivel, descripcion ASC";
+$queryCuerpo = "SELECT id, descripcion, nivel FROM tabCuerpo WHERE activa= 'S' ORDER BY orden asc, nivel, descripcion ASC";
 $resultCuerpo = mysqli_query($link, $queryCuerpo);
 //printf("Select returned resultCuerpo %d rows.\n", mysqli_num_rows($resultCuerpo));
 
@@ -108,7 +108,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					}
 				});
 
-				//CARGAR BLOQUES CLASIFICACION
+				//CARGAR BLOQUES y CLASIFICACION para el ADMINISTRADOR
 				$.ajax({
 					url: "campusControllerConsultarTemas.php",
 					method: "POST",
@@ -125,12 +125,16 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						// Load the new options
 						for (index = 0; index < data.length; ++index) {
 							option = data[index];
+							
 							if (option.tipo == '1') {
+								// NUEVO BLOQUE
 								select_option_bloque += '<option value="'+option.id+'">'+option.tema+'</option>';
+								
 								select_option += '<optgroup label="'+ option.tema +'" value="'+option.id+'">'+option.tema+'</optgroup>';
 								select_option += '<option value="'+option.id+'">(+) '+option.tema+'</option>';
 							} else {
-									select_option += '<option value="'+option.id+'"> - '+option.tema+'</option>';
+								// TEMA DEL BLOQUE ACTUAL
+								select_option += '<option value="'+option.id+'"> - '+option.tema+'</option>';
 							}
 						}
 
@@ -175,9 +179,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						// Load the new options
 						for (index = 0; index < data.length; ++index) {
 							option = data[index];
-							if (option.tipo == '1') {
-								select_option_clasif += '<option value="'+option.id+'">(+) '+option.tema+'</option>';
-							} else {
+							if (option.tipo != '1') {
 									select_option_clasif += '<option value="'+option.id+'"> - '+option.tema+'</option>';
 							}
 						}
@@ -986,12 +988,12 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					<div class="row">	
 						<div class="col-sm-3">
 							<!--<div class="form-group mb-5">-->
-								<label for="textFilter">Id-Pregunta/Texto a buscar:</label><br>
+								<label for="textFilter">Id/Texto a buscar:</label><br>
 								<input id="textFilter" type="text" class="" placeholder="Search text" name="textFilter" style="width: 80%;">										
 							<!--</div>-->
 						</div>
 						<div class="col-sm-3">
-								<label for="anioOfertaFilter">Oferta [ año >= ]:</label><br>
+								<label for="anioOfertaFilter">Oferta [ Año >= ]:</label><br>
 								<input id="anioOfertaFilter" type="text" class="" placeholder="Search Year Filter" name="anioOfertaFilter" style="width: 80%;">										
 							
 						</div>		
@@ -1011,7 +1013,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						<div class="col-sm-3">
 							<!--<div class="row">-->
 							<!--<div class="form-group mb-5">-->
-								<label for="percentErrorFilter">(%) Ratio error:</label><br>
+								<label for="percentErrorFilter">Ratio error [errores/intentos] (%):</label><br>
 								<input id="percentErrorFilter" type="text" class="" placeholder="50" name="percentErrorFilter" style="width: 80%;">										
 							<!--</div>-->
 						</div>

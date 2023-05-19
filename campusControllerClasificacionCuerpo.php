@@ -44,7 +44,7 @@ require_once "campusConfig.php";
    WHERE c.id not in (SELECT cco.idClasificacion 
       FROM tabClasificacionCuerpo cco 
       WHERE cco.idCuerpo = " .$idCuerpo. ")
-   ORDER BY 7 ASC, 3 ASC, 4 DESC, 2 ASC";
+   ORDER BY 3 ASC, 4 DESC, 2 ASC";
 
    //printf($queryClasificacion);
    //exit; 
