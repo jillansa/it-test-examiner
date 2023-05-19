@@ -44,7 +44,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				$("#temarioSelect").val([]);
 				
 				$.ajax({
-					url: "campusControllerClasificacionOriginalCuerpo.php",
+					url: "campusControllerClasificacionCuerpo.php",
 					method: "POST",
 					data: { cursoCuerpoSelect: cursoCuerpoSelect, mode: "CONSULTA"},
 					success: function(dataresponse, statustext, response){						
@@ -108,7 +108,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				}
 				
 				$.ajax({
-					url: "campusControllerClasificacionOriginalCuerpo.php",
+					url: "campusControllerClasificacionCuerpo.php",
 					method: "POST",
 					data: { 
 						cursoCuerpoSelect: cursoCuerpoSelect, 
@@ -144,7 +144,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 	<div class="container-fuild">
         <div class="col-sm-12">
 			
-			<h3>CLASIFICACION TEMARIO CUERPO:</h3>
+			<h3>CLASIFICACION TEMARIO-CURSO:</h3>
 		
 			<form class="" action="">
 				<!--<div class="container-fluid">	-->	
@@ -156,7 +156,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					<div class="row">
 						<div class="col-sm-3">	
 																			
-							<label for="cursoCuerpoSelect">Cuerpo (*):</label><br>
+							<label for="cursoCuerpoSelect">Curso (*):</label><br>
 							<!-- Se deben mostrar solo los cursos para los que el usuario esta matriculado (activo) -->						
 							<select name="cursoCuerpoSelect" id="cursoCuerpoSelect" style="width: 80%;">
 								<option value=""></option>

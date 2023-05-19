@@ -20,14 +20,21 @@ $resultCuerpo2 = mysqli_query($link, $queryCuerpo);
 //printf("Select returned resultCuerpo %d rows.\n", mysqli_num_rows($resultCuerpo));
 
 
-// TODO, la lista de temas, deberia consultarse tras seleccionar el cuerpo (campo obligatorio)
-//$queryTema = "SELECT id, tema, bloque, tipo FROM tabClasificacion ORDER BY bloque ASC, tipo DESC, tema ASC";
-//$resultTema = mysqli_query($link, $queryTema);
-//printf("Select returned resultTema %d rows.\n", mysqli_num_rows($resultTema));
+$queryOferta = "SELECT o.id, a.nombre, o.descripcion FROM tabOferta o LEFT JOIN tabAdministracion a
+	 ON o.idAdministracion = a.id ORDER BY o.anio desc, a.nombre ASC";
+$resultOferta = mysqli_query($link, $queryOferta);
 
 
-$queryExamen = "SELECT id, descripcion FROM tabExamen WHERE idOferta is null and idCuerpo is null ORDER BY descripcion ASC";
+$queryExamen = "SELECT id, descripcion, fecha_examen, modalidad FROM tabExamen ORDER BY fecha_examen desc, descripcion ASC";
 $resultExamen = mysqli_query($link, $queryExamen);
+
+
+$queryClasificacion = "SELECT id, bloque, tema, tipo FROM tabClasificacion";
+$resultClasificacion = mysqli_query($link, $queryClasificacion);
+$resultClasificacion2 = mysqli_query($link, $queryClasificacion);
+$resultClasificacion3 = mysqli_query($link, $queryClasificacion);
+$resultClasificacion4 = mysqli_query($link, $queryClasificacion);
+$resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 
 //mysql_close($link);
 ?>
@@ -60,127 +67,6 @@ $resultExamen = mysqli_query($link, $queryExamen);
 			});
 		}
 
-		$(function () { /* DOM ready */
-			$("#cursoCuerpoSelect").change(function() {		
-
-				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
-				
-				ofertaSelect = document.getElementById('ofertaSelect');
-				ofertaSelect.options.length = 0;
-				examenSelect = document.getElementById('examenSelect');
-				examenSelect.options.length = 0;
-
-				// CARGAR OFERTA
-				$.ajax({
-					url: "campusControllerConsultarOferta.php",
-					method: "POST",
-					data: { cursoCuerpoSelect: cursoCuerpoSelect, tabOfertaCuerpoActiva : " in ('S','N') "},
-					success: function(dataresponse, statustext, response){
-						var data = JSON.parse(dataresponse);
-						
-						var select_option = '';
-						select_option += '<option value=""></option>';
-						// Load the new options
-						for (index = 0; index < data.length; ++index) {
-							option = data[index];							
-							select_option += '<option value="'+option.id+'">'+option.anio+' - '+option.administracion+ ' | ' +option.descripcion+'</option>';
-						}
-
-						$('#ofertaSelect').html('').append(select_option)
-						$('#ofertaModalSelect').html('').append(select_option)
-						$('#ofertaSelect').prop('disabled', false);
-					},
-					error: function(request, errorcode, errortext){
-						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
-					}
-				});
-
-				// CARGAR CLASIFICACION
-				temaSelect1 = document.getElementById('temaSelect1');
-				temaSelect1.options.length = 0;
-				temaSelect2 = document.getElementById('temaSelect2');
-				temaSelect2.options.length = 0;
-				temaSelect3 = document.getElementById('temaSelect3');
-				temaSelect3.options.length = 0;
-				temaSelect4 = document.getElementById('temaSelect4');
-				temaSelect4.options.length = 0;
-				temaSelect5 = document.getElementById('temaSelect5');
-				temaSelect5.options.length = 0;
-
-				$.ajax({
-					url: "campusControllerConsultarTemasOriginal.php",
-					method: "POST",
-					data: { cursoCuerpoSelect: cursoCuerpoSelect },
-					success: function(dataresponse, statustext, response){
-						var data = JSON.parse(dataresponse);
-
-						var select_option = '';
-						select_option += '<option value=""></option>';
-						// Load the new options
-						for (index = 0; index < data.length; ++index) {
-							option = data[index];
-							if (option.tipo == '1') {
-								select_option += '<optgroup label="'+ option.tema +'" value="'+option.id+'">'+option.tema+'</optgroup>';
-								select_option += '<option value="'+option.id+'">(+) '+option.tema+'</option>';
-							} else {
-								select_option += '<option value="'+option.id+'"> - '+option.tema+'</option>';
-							}
-						}
-
-						$('#temaSelect1').html('').append(select_option)
-						$('#temaSelect1').prop('disabled', false);
-						$('#temaSelect2').html('').append(select_option)
-						$('#temaSelect2').prop('disabled', false);
-						$('#temaSelect3').html('').append(select_option)
-						$('#temaSelect3').prop('disabled', false);
-						$('#temaSelect4').html('').append(select_option)
-						$('#temaSelect4').prop('disabled', false);
-						$('#temaSelect5').html('').append(select_option)
-						$('#temaSelect5').prop('disabled', false);
-					},
-					error: function(request, errorcode, errortext){
-						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
-					}
-				});
-
-			});
-		});
-
-		$(function () { /* DOM ready */
-			$("#ofertaSelect").change(function() {		
-
-				var ofertaSelect = $("#ofertaSelect").val();
-				var cursoCuerpoSelect = $("#cursoCuerpoSelect").val();
-
-				// CARGAR EXAMENES
-				examenSelect = document.getElementById('examenSelect');
-				examenSelect.options.length = 0;
-
-				$.ajax({
-					url: "campusControllerConsultarExamenes.php",
-					method: "POST",
-					data: { cursoCuerpoSelect: cursoCuerpoSelect, ofertaSelect: ofertaSelect },
-					success: function(dataresponse, statustext, response){
-						var data = JSON.parse(dataresponse);
-
-						var select_option = '';
-						select_option += '<option value=""></option>';
-						// Load the new options
-						for (index = 0; index < data.length; ++index) {
-							option = data[index];
-							select_option += '<option value="'+option.id+'">'+option.fechaExamen+ ' - ' +option.modalidad+ ' | ' +option.descripcion+'</option>';
-						}
-
-						$('#examenSelect').html('').append(select_option)
-						$('#examenSelect').prop('disabled', false);
-					},
-					error: function(request, errorcode, errortext){
-						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
-					}
-				});
-
-			});
-		});
 	
 		$(function () {
 			$("#guardarBtn").click(function(evt){
@@ -342,7 +228,14 @@ $resultExamen = mysqli_query($link, $queryExamen);
 							<!-- Se deben mostrar el listado de temas de curso indicado -->
 							<label for="ofertaSelect">Oferta:</label><br>	
 							<select class="selectGroup" name="ofertaSelect" id="ofertaSelect" style="width: 80%;">
-								<option value=""></option>  
+								<option value=""></option> 
+								<?php 
+								while ($row = mysqli_fetch_array($resultOferta))
+								{
+									echo "<option value=".$row['id'].">".$row['nombre']." | ".$row['descripcion']."</option>";
+
+								}
+								?>   
 							</select>					
 						</div>
 
@@ -354,7 +247,7 @@ $resultExamen = mysqli_query($link, $queryExamen);
 									<option value=""></option>  
 									<?php while ($row = mysqli_fetch_array($resultExamen))
 									{
-									echo "<option value=".$row['id'].">".$row['descripcion']."</option>";
+									echo "<option value=".$row['id'].">".$row['descripcion']." | " .$row['modalidad']. " | " .$row['fecha_examen']."</option>";
 
 									}
 									?>
@@ -423,7 +316,14 @@ $resultExamen = mysqli_query($link, $queryExamen);
 							<div class="col-sm-6">																			
 								<label for="ofertaModalSelect">Oferta:</label><br>
 								<select name="ofertaModalSelect" id="ofertaModalSelect" required="true" style="width: 80%;">
-								<option value=""></option>  
+								<option value=""></option> 
+								<?php 
+								while ($row = mysqli_fetch_array($resultOferta))
+								{
+									echo "<option value=".$row['id'].">".$row['nombre']." | ".$row['descripcion']."</option>";
+
+								}
+								?>  
 								</select>	
 							</div>
 						</div>
@@ -491,8 +391,23 @@ $resultExamen = mysqli_query($link, $queryExamen);
 									<div class="col-sm-3">					
 										<!-- Se deben mostrar el listado de temas de curso indicado -->
 										<label for="temaSelect1">Clasificación:</label><br>	
-										<select class="selectGroup" name="temaSelect1" id="temaSelect1" style="width: 80%;" disabled>
+										<select class="selectGroup" name="temaSelect1" id="temaSelect1" style="width: 80%;" >
 											<option value=""></option>  
+												<?php 
+												while ($row = mysqli_fetch_array($resultClasificacion))
+												{
+													if ($row['tipo'] == '1') {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
+													} else {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+													}								
+													
+													//echo "<option value=".$row['id'].">".$row['bloque']." | ".$row['tema']."</option>";
+												}
+												?>   
+												
 										</select>					
 									</div>
 
@@ -534,8 +449,22 @@ $resultExamen = mysqli_query($link, $queryExamen);
 									<div class="col-sm-3">					
 										<!-- Se deben mostrar el listado de temas de curso indicado -->
 										<label for="temaSelect2">Clasificación:</label><br>	
-										<select class="selectGroup" name="temaSelect2" id="temaSelect2" style="width: 80%;" disabled>
+										<select class="selectGroup" name="temaSelect2" id="temaSelect2" style="width: 80%;" >
 											<option value=""></option>  
+											<?php 
+												while ($row = mysqli_fetch_array($resultClasificacion2))
+												{
+													if ($row['tipo'] == '1') {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
+													} else {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+													}								
+													
+													//echo "<option value=".$row['id'].">".$row['bloque']." | ".$row['tema']."</option>";
+												}
+												?>  
 										</select>					
 									</div>
 
@@ -577,8 +506,22 @@ $resultExamen = mysqli_query($link, $queryExamen);
 									<div class="col-sm-3">					
 										<!-- Se deben mostrar el listado de temas de curso indicado -->
 										<label for="temaSelect3">Clasificación:</label><br>	
-										<select class="selectGroup" name="temaSelect3" id="temaSelect3" style="width: 80%;" disabled>
+										<select class="selectGroup" name="temaSelect3" id="temaSelect3" style="width: 80%;" >
 											<option value=""></option>  
+											<?php 
+												while ($row = mysqli_fetch_array($resultClasificacion3))
+												{
+													if ($row['tipo'] == '1') {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
+													} else {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+													}								
+													
+													//echo "<option value=".$row['id'].">".$row['bloque']." | ".$row['tema']."</option>";
+												}
+												?>  
 										</select>					
 									</div>
 
@@ -620,8 +563,22 @@ $resultExamen = mysqli_query($link, $queryExamen);
 									<div class="col-sm-3">					
 										<!-- Se deben mostrar el listado de temas de curso indicado -->
 										<label for="temaSelect4">Clasificación:</label><br>	
-										<select class="selectGroup" name="temaSelect4" id="temaSelect4" style="width: 80%;" disabled>
+										<select class="selectGroup" name="temaSelect4" id="temaSelect4" style="width: 80%;" >
 											<option value=""></option>  
+											<?php 
+												while ($row = mysqli_fetch_array($resultClasificacion4))
+												{
+													if ($row['tipo'] == '1') {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
+													} else {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+													}								
+													
+													//echo "<option value=".$row['id'].">".$row['bloque']." | ".$row['tema']."</option>";
+												}
+												?>  
 										</select>					
 									</div>
 
@@ -663,8 +620,22 @@ $resultExamen = mysqli_query($link, $queryExamen);
 									<div class="col-sm-3">					
 										<!-- Se deben mostrar el listado de temas de curso indicado -->
 										<label for="temaSelect5">Clasificación:</label><br>	
-										<select class="selectGroup" name="temaSelect5" id="temaSelect5" style="width: 80%;" disabled>
+										<select class="selectGroup" name="temaSelect5" id="temaSelect5" style="width: 80%;" >
 											<option value=""></option>  
+											<?php 
+												while ($row = mysqli_fetch_array($resultClasificacion5))
+												{
+													if ($row['tipo'] == '1') {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
+													} else {
+														echo "<option value=".$row['id'].">".$row['tema']."</option>";
+													}								
+													
+													//echo "<option value=".$row['id'].">".$row['bloque']." | ".$row['tema']."</option>";
+												}
+												?>  
 										</select>					
 									</div>
 

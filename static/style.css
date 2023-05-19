@@ -18,6 +18,10 @@
     vertical-align: middle;
 }
 
+.divPreWrap {
+    white-space: pre-wrap;
+}
+
 .headImage {
     /*height: 45vh;*/
     max-width: 100%;

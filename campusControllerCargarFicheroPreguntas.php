@@ -55,19 +55,23 @@ if ($_FILES['fichero_usuario']['size'] > 0){
                 $lAux = explode("|", $line);
                 $strBloque = trim($lAux[0]);
                 $strClasificacion = trim($lAux[1]);
-                $clasificacion = "(SELECT id FROM tabClasificacionOriginal WHERE bloque = '".$strBloque."' and tema = '".$strClasificacion."')";
+                //if is_null($strClasificacion) {
+                //    $clasificacion = "(SELECT id FROM tabClasificacionOriginal WHERE bloque = '".$strBloque."' and tema = '".$strClasificacion."')";
+                //} else {
+                    $clasificacion = "211"; // PDTE_CATEGORIZAR
+                //}
                 //echo "CLASIFICACION: " . $clasificacion . "<br>";
             }
             // PREGUNTA
             if (($nline-10) % 6 == 2){
-                $pregunta = $line;
+                $pregunta = str_replace("'",'"',$line);
                 //echo "PREGUNTA: " . $pregunta;
                 echo "<code>INSERT INTO `tabPreguntas`(id,`idExamen`, `texto`) VALUES (" . $id . "," . $idExamen . ",'".$pregunta."');"."</code><br>";            
                 echo "<code>INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) VALUES (". $id . ",".$clasificacion.");"."</code><br>"; 
             }
             // RESPUESTAS
             if (((($nline-10) % 6) == 3) or ((($nline-10) % 6) == 4) or ((($nline-10) % 6) == 5) or ((($nline-10) % 6) == 0)){
-                $respuesta = $line;
+                $respuesta = str_replace("'",'"',$line);
                 //echo "RESPUESTA: " . $respuesta;
                 //echo "primer caracter:" . $respuesta[0] ."<br>";
 

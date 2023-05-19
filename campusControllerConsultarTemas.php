@@ -7,21 +7,31 @@ header("Content-Type: text/html;charset=utf-8");
 session_start();
 
 $cursoCuerpoSelect = $_POST["cursoCuerpoSelect"];
-$ofertaSelect = $_POST["ofertaSelect"];
+$bloqueSelect = $_POST["bloqueSelect"];
 
 // consulta BBDD
 // Include config environment file
 require_once "campusConfig.php";
 
-$queryClasificacion = "SELECT distinct c.id as id, c.tema, c.bloque, c.tipo
-FROM tabCuerpo c2
-JOIN tabOfertaCuerpo oc ON oc.idCuerpo = c2.id
-JOIN tabOfertaCuerpo_Clasificacion occ ON occ.idOfertaCuerpo = oc.id
-JOIN tabClasificacion c ON c.id = occ.idClasificacion
-WHERE c2.id = " . $cursoCuerpoSelect . 
-" AND oc.idOferta = " .$ofertaSelect. " AND oc.activa = 'S'
-ORDER BY bloque ASC, tipo DESC, tema ASC";
+$queryClasificacion = "SELECT distinct tco.id as id, tco.tema, tco.bloque, tco.tipo
+FROM tabClasificacion tco ";
 
+if ($cursoCuerpoSelect <> "") {
+    $queryClasificacion = $queryClasificacion . " , tabClasificacionCuerpo tcoc 
+    WHERE tcoc.idClasificacion = tco.id 
+    AND tcoc.idCuerpo = " . $cursoCuerpoSelect . " "; 
+} else {
+    $queryClasificacion = $queryClasificacion . " WHERE 1 = 1 ";
+}
+
+if ($bloqueSelect <> "") {
+    $queryClasificacion = $queryClasificacion . " AND tco.idBloque = " . $bloqueSelect . " "; 
+} 
+
+$queryClasificacion = $queryClasificacion . "ORDER BY tco.orden ASC, tco.bloque ASC, tco.tipo DESC, tco.tema ASC";
+
+//printf($queryExamenes);
+//exit;
 
 $resultClasificacion = mysqli_query($link, $queryClasificacion);
 $myArray = array();

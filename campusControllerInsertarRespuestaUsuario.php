@@ -11,7 +11,7 @@ session_start();
 
 $idPregunta = $_POST["idPregunta"];
 $idUsuario = $_POST["idUsuario"];
-//$acierto = $_POST["acierto"];
+$acierto = $_POST["acierto"];
 $respuesta = $_POST["respuesta"];
 $respuestaCorrecta = $_POST["respuestaCorrecta"];
 
@@ -19,9 +19,19 @@ $respuestaCorrecta = $_POST["respuestaCorrecta"];
 //echo "Llegamos al final" . $idPregunta . " | " . $idUsuario . " | " . $acierto ;
 //exit;
 
-if ($acierto = $_POST["acierto"]) {
+// ACIERTO
+if ($acierto==1) {
    $_SESSION['aciertosSession'] = $_SESSION['aciertosSession'] + 1;
-} else {
+}
+
+// SIGUIENTE Y NO SE HA CONTESTADO YA LA PREGUNTA
+if($acierto==99){
+   $_SESSION['listaErroresSession'] = $_SESSION['listaErroresSession'] .
+      $idPregunta . ';' . $respuestaCorrecta . ';' . $respuesta .'|';
+} 
+
+// ERROR
+if ($acierto==0) {
    $_SESSION['erroresSession'] = $_SESSION['erroresSession'] + 1;
    $_SESSION['listaErroresSession'] = $_SESSION['listaErroresSession'] .
        $idPregunta . ';' . $respuestaCorrecta . ';' . $respuesta .'|';
@@ -36,16 +46,19 @@ $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 $highest_id = $row[0];*/
 
-$queryUsername = "INSERT INTO tabRespuestasUsuario (`idPregunta`, `idUsuario`, `acierto`) VALUES  (".$idPregunta.",".$idUsuario.",".$_POST["acierto"].")";
+// solo si es una comprobacion, insertamos la estadistica. 
+if ($acierto==1 || $acierto==0) {
+   $queryUsername = "INSERT INTO tabRespuestasUsuario (`idPregunta`, `idUsuario`, `acierto`) VALUES  (".$idPregunta.",".$idUsuario.",".$_POST["acierto"].")";
 
-if (mysqli_query($link, $queryUsername)) {
-    // Insert ok
-    //echo "Llegamos al final OK: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $queryUsername ;
-    exit;
- } else {
-    // Insert Error
-    //echo "Llegamos al final con ERROR: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $queryUsername ;
-    exit;
- }
-
+   if (mysqli_query($link, $queryUsername)) {
+      // Insert ok
+      //echo "Llegamos al final OK: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $queryUsername ;
+      exit;
+   } else {
+      // Insert Error
+      //echo "Llegamos al final con ERROR: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $queryUsername ;
+      exit;
+   }
+}
+exit;
 ?>
