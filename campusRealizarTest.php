@@ -291,6 +291,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				var nivelSelect = $("#nivelSelect").val();
 				var percentErrorFilter = $("#percentErrorFilter").val();
 				var textFilter = $("#textFilter").val();
+				var anioOfertaFilter = $("#anioOfertaFilter").val();
 				var sinRespuestasFilter = $("#sinRespuestasFilter").prop('checked');
 				var clasifPlusFilter = $("#clasifPlusFilter").prop('checked');
 				var bugFilter = $("#bugFilter").prop('checked');
@@ -318,7 +319,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						clasificacionSelect: clasificacionSelect, bloqueSelect: bloqueSelect,
 						examenSelect: examenSelect,
 						nivelSelect: nivelSelect, idPreguntaClasificacion: idPreguntaClasificacion, percentErrorFilter: percentErrorFilter, 
-						textFilter: textFilter, sinRespuestasFilter: sinRespuestasFilter, favoritasFilter: favoritasFilter, 
+						textFilter: textFilter, anioOfertaFilter: anioOfertaFilter, sinRespuestasFilter: sinRespuestasFilter, favoritasFilter: favoritasFilter, 
 						clasifPlusFilter: clasifPlusFilter, bugFilter: bugFilter, noExisteRespuestaFilter: noExisteRespuestaFilter,
 						sinContestarSession: sinContestarSession},
 					success: function(dataresponse, statustext, response){
@@ -467,6 +468,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 				var nivelSelect = $("#nivelSelect").val();
 				var percentErrorFilter = $("#percentErrorFilter").val();
 				var textFilter = $("#textFilter").val();
+				var anioOfertaFilter = $("#anioOfertaFilter").val();
 				var sinRespuestasFilter = $("#sinRespuestasFilter").prop('checked');
 				var clasifPlusFilter = $("#clasifPlusFilter").prop('checked');	
 				var bugFilter = $("#bugFilter").prop('checked');	
@@ -499,7 +501,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						clasificacionSelect: clasificacionSelect, bloqueSelect: bloqueSelect,
 						examenSelect: examenSelect,
 						nivelSelect: nivelSelect, idPreguntaClasificacion: "0", percentErrorFilter: percentErrorFilter, 
-						textFilter: textFilter, sinRespuestasFilter: sinRespuestasFilter, favoritasFilter: favoritasFilter,
+						textFilter: textFilter, anioOfertaFilter: anioOfertaFilter, sinRespuestasFilter: sinRespuestasFilter, favoritasFilter: favoritasFilter,
 						clasifPlusFilter: clasifPlusFilter, bugFilter: bugFilter, noExisteRespuestaFilter: noExisteRespuestaFilter},
 					success: function(dataresponse, statustext, response){
 						
@@ -993,7 +995,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 							<!--</div>-->
 						</div>
 						<div class="col-sm-3">
-								<label for="anioOfertaFilter">Oferta [ Año >= ]:</label><br>
+								<label for="anioOfertaFilter">Fec. Examen [ YYYY >= ]:</label><br>
 								<input id="anioOfertaFilter" type="text" class="" placeholder="Search Year Filter" name="anioOfertaFilter" style="width: 80%;">										
 							
 						</div>		

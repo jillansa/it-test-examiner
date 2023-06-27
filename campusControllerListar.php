@@ -13,6 +13,7 @@ $examen = $_GET["examenSelect"];
 $nivel = $_GET["nivelSelect"];
 $percentErrorFilter = $_GET["percentErrorFilter"];
 $textFilter = $_GET["textFilter"];
+$anioOfertaFilter = $_GET["anioOfertaFilter"];
 $sinRespuestasFilter = $_GET["sinRespuestasFilter"];
 $favoritasFilter = $_GET["favoritasFilter"];
 $clasifPlusFilter = $_GET["clasifPlusFilter"];
@@ -70,24 +71,39 @@ if (isset($examen) && $examen!= null && $examen!= "") {
 
 
 // FILTRO DE NIVEL
-if (isset($nivel) && $nivel!= null && $nivel!= "") {
+/*if (isset($nivel) && $nivel!= null && $nivel!= "") {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Nivel Filter ON ";
     $queryPregunta = $queryPregunta . " AND p.nivel = '" . $nivel . "' ";
 } else {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Nivel Filter OFF ";
-}
+}*/
 
 // FILTRO DE TEXTO
 if (isset($textFilter) && $textFilter!= null && $textFilter!= "") {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Text Filter ON ";
-    $queryPregunta = $queryPregunta . " AND (
-            upper(p.texto) like '%" . $textFilter . "%' 
-            OR exists (select 1 from tabRespuestas tr 
-                where tr.idPregunta = p.id and upper(tr.texto) like '%".$textFilter."%')
-            )";
+
+    if (is_numeric($textFilter)) { // ID PREGUNTA
+        $queryPregunta = $queryPregunta . " 
+            AND p.id = " . $textFilter  . " ";
+    } else { // SINO TEXTO 
+        $queryPregunta = $queryPregunta . " AND (
+                upper(p.texto) like '%" . $textFilter . "%' 
+                OR exists (select 1 from tabRespuestas tr 
+                    where tr.idPregunta = p.id and upper(tr.texto) like '%".$textFilter."%')
+                )";
+    }
 } else {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Text Filter OFF ";
 }
+
+// FILTRO DE FECHA_ANIO
+if (isset($anioOfertaFilter) && $anioOfertaFilter!= null && $anioOfertaFilter!= "") {
+    $pregunta['metadatos'] = $pregunta['metadatos'] . " | AnioOfertaFilter Filter ON "; 
+    $queryPregunta = $queryPregunta . " AND e.fecha_examen > DATE('".$anioOfertaFilter."-01-01') ";    
+} else {
+    $pregunta['metadatos'] = $pregunta['metadatos'] . " | AnioOfertaFilter Filter OFF ";
+}
+
 
 // FILTRO DE % ERROR
 if (isset($percentErrorFilter) && $percentErrorFilter!= null && $percentErrorFilter!= "") {
@@ -160,22 +176,25 @@ while ($row = mysqli_fetch_array($resultPregunta))
     $resultRespuestas = mysqli_query($link, $sql);
 
     //exit;
-        
+    echo "<table>";
     while ($row = mysqli_fetch_array($resultRespuestas))
     {      
+        echo "<tr>";
         
         if (boolval($row['correcta']) == true ){
-            echo "<div style='color: #339800;'>";
-            echo "(*): ";         
+            echo "<td>(*)</td><td>";
+            echo "<div style='color: #339800;'>";            
             echo $row['texto'] . '</div>';
+            echo "</td>";         
             
         } else {
-            echo "<div>" . $row['texto'] . '</div>';
+            echo "<td></td><td>" . $row['texto'] . '</td>';
         }
 
-        
+        echo "</tr>";
     }
-
+    echo "</table>";
+    
     echo  '<br>';
     echo  '<hr size="2px" color="black">';
 }

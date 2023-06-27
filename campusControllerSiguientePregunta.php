@@ -46,6 +46,7 @@ if ($_POST["recuperarSesion"] == "1") {
     $nivel = $obj->{"nivelSelect"};
     $percentErrorFilter = $obj->{"percentErrorFilter"};
     $textFilter = $obj->{"textFilter"};
+    $anioOfertaFilter = $obj->{"anioOfertaFilter"};    
     $sinRespuestasFilter = $obj->{"sinRespuestasFilter"};
     $favoritasFilter = $obj->{"favoritasFilter"};
     $clasifPlusFilter = $obj->{"clasifPlusFilter"};
@@ -66,6 +67,7 @@ if ($_POST["recuperarSesion"] == "1") {
     $_SESSION["nivelSelect"] = $nivel;
     $_SESSION["percentErrorFilter"] = $percentErrorFilter;
     $_SESSION["textFilter"] = $textFilter;
+    $_SESSION["anioOfertaFilter"] = $anioOfertaFilter;
     $_SESSION["sinRespuestasFilter"] = $sinRespuestasFilter;
     $_SESSION["favoritasFilter"] = $favoritasFilter;
     $_SESSION["clasifPlusFilter"] = $clasifPlusFilter;
@@ -86,6 +88,7 @@ if ($_POST["recuperarSesion"] == "1") {
     //$nivel = $_POST["nivelSelect"];
     $percentErrorFilter = $_POST["percentErrorFilter"];
     $textFilter = $_POST["textFilter"];
+    $anioOfertaFilter = $_POST["anioOfertaFilter"];
     $sinRespuestasFilter = $_POST["sinRespuestasFilter"];
     $favoritasFilter = $_POST["favoritasFilter"];
     $clasifPlusFilter = $_POST["clasifPlusFilter"];
@@ -102,6 +105,7 @@ if ($_POST["recuperarSesion"] == "1") {
     //$_SESSION["nivelSelect"] = $nivel;
     $_SESSION["percentErrorFilter"] = $percentErrorFilter;
     $_SESSION["textFilter"] = $textFilter;
+    $_SESSION["anioOfertaFilter"] = $anioOfertaFilter;
     $_SESSION["sinRespuestasFilter"] = $sinRespuestasFilter;
     $_SESSION["favoritasFilter"] = $favoritasFilter;
     $_SESSION["clasifPlusFilter"] = $clasifPlusFilter;
@@ -119,6 +123,7 @@ if ($_POST["recuperarSesion"] == "1") {
     //$nivel = $_SESSION["nivelSelect"];
     $percentErrorFilter = $_SESSION["percentErrorFilter"];
     $textFilter = $_SESSION["textFilter"];
+    $anioOfertaFilter = $_SESSION["anioOfertaFilter"];
     $sinRespuestasFilter = $_SESSION["sinRespuestasFilter"];
     $favoritasFilter = $_SESSION["favoritasFilter"];
     $clasifPlusFilter = $_SESSION["clasifPlusFilter"];
@@ -212,6 +217,15 @@ if (isset($textFilter) && $textFilter!= null && $textFilter!= "") {
 } else {
     $pregunta['metadatos'] = $pregunta['metadatos'] . " | Text Filter OFF ";
 }
+
+// FILTRO DE FECHA_ANIO
+if (isset($anioOfertaFilter) && $anioOfertaFilter!= null && $anioOfertaFilter!= "") {
+    $pregunta['metadatos'] = $pregunta['metadatos'] . " | AnioOfertaFilter Filter ON "; 
+    $queryPregunta = $queryPregunta . " AND e.fecha_examen > DATE('".$anioOfertaFilter."-01-01') ";    
+} else {
+    $pregunta['metadatos'] = $pregunta['metadatos'] . " | AnioOfertaFilter Filter OFF ";
+}
+
 
 // FILTRO DE % ERROR
 if (isset($percentErrorFilter) && $percentErrorFilter!= null && $percentErrorFilter!= "") {
