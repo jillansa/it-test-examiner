@@ -108,7 +108,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 					}
 				});
 
-				//CARGAR BLOQUES y CLASIFICACION para el ADMINISTRADOR
+				//CARGAR BLOQUES EN FILTRO DE PREGUNTAS
 				$.ajax({
 					url: "campusControllerConsultarTemas.php",
 					method: "POST",
@@ -141,6 +141,42 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						$('#bloqueSelect').html('').append(select_option_bloque)
 						$('#bloqueSelect').prop('disabled', false);
 
+					},
+					error: function(request, errorcode, errortext){
+						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
+					}
+				});
+				
+				//SELECTOR DE CAMBIO DE CLASIFICACION-TEMA para el ADMINISTRADOR
+				$.ajax({
+					url: "campusControllerConsultarTemas.php",
+					method: "POST",
+					data: { cursoCuerpoSelect: "" },
+					success: function(dataresponse, statustext, response){
+						var data = JSON.parse(dataresponse);
+
+						var select_option = '';
+						select_option += '<option value=""></option>';
+						
+						var select_option_bloque = '';
+						select_option_bloque += '<option value=""></option>';				
+
+						// Load the new options
+						for (index = 0; index < data.length; ++index) {
+							option = data[index];
+							
+							if (option.tipo == '1') {
+								// NUEVO BLOQUE
+								select_option_bloque += '<option value="'+option.id+'">'+option.tema+'</option>';
+								
+								select_option += '<optgroup label="'+ option.tema +'" value="'+option.id+'">'+option.tema+'</optgroup>';
+								select_option += '<option value="'+option.id+'">(+) '+option.tema+'</option>';
+							} else {
+								// TEMA DEL BLOQUE ACTUAL
+								select_option += '<option value="'+option.id+'"> - '+option.tema+'</option>';
+							}
+						}
+
 						$('#temaSelectPregunta').html('').append(select_option)
 						$('#temaSelectPregunta').prop('disabled', false);
 
@@ -149,6 +185,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
 					}
 				});
+				
 
 
 			});
