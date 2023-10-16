@@ -14,7 +14,7 @@ if(!($_SESSION["session_username"] == "jillansa")) {
 	exit;
 }
 
-$queryCuerpo = "SELECT id, descripcion, nivel FROM tabCuerpo WHERE activa= 'S' ORDER BY nivel, descripcion ASC";
+$queryCuerpo = "SELECT id, descripcion, nivel FROM tabCuerpo WHERE activa= 'S' ORDER BY orden asc, nivel, descripcion ASC";
 $resultCuerpo = mysqli_query($link, $queryCuerpo);
 //printf("Select returned resultCuerpo %d rows.\n", mysqli_num_rows($resultCuerpo));
 
