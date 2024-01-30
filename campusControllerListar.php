@@ -23,8 +23,8 @@ $idPreguntaClasificacion = $_GET["idPreguntaClasificacion"];
 $idPreguntaClasificacionRespondidas = $idPreguntaClasificacion;
 
 echo '<br>';
-echo "<h1>LISTADO DE BUSQUEDA:</h1> PARAMS: Cuerpo:". $cursoCuerpo . " / Bloque:". $bloque . " / Tema:" . $clasificacion;
-echo '<br>';
+echo "<h1>LISTADO DE BUSQUEDA:</h1> PARAMS: Cuerpo: ". $cursoCuerpo . " / Bloque: ". $bloque . " / Tema: " . $clasificacion;
+echo  '<hr size="2px" color="black">';
 //exit;
 
 
@@ -151,10 +151,9 @@ if (isset($sinRespuestasFilter) && $sinRespuestasFilter!= null && $sinRespuestas
 
 $queryPregunta = $queryPregunta . " ORDER BY random " ; // LIMIT 0,6";
 
-echo $queryPregunta;
+//echo $queryPregunta;
 //exit;
-echo '<br>';
-echo '<br>';
+//echo '<br>';
 
 $resultPregunta = mysqli_query($link, $queryPregunta);
 

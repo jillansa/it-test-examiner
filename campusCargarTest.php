@@ -372,7 +372,7 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 												while ($row = mysqli_fetch_array($resultClasificacion))
 												{
 													if ($row['tipo'] == '1') {
-														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<optgroup label='".$row['tema']."' value='".$row['id']."'>".$row['tema']."</optgroup>";
 														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
 													} else {
 														echo "<option value=".$row['id'].">".$row['tema']."</option>";
@@ -429,7 +429,7 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 												while ($row = mysqli_fetch_array($resultClasificacion2))
 												{
 													if ($row['tipo'] == '1') {
-														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<optgroup label='".$row['tema']."' value='".$row['id']."'>".$row['tema']."</optgroup>";
 														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
 													} else {
 														echo "<option value=".$row['id'].">".$row['tema']."</option>";
@@ -485,7 +485,7 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 												while ($row = mysqli_fetch_array($resultClasificacion3))
 												{
 													if ($row['tipo'] == '1') {
-														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<optgroup label='".$row['tema']."' value='".$row['id']."'>".$row['tema']."</optgroup>";
 														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
 													} else {
 														echo "<option value=".$row['id'].">".$row['tema']."</option>";
@@ -541,7 +541,7 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 												while ($row = mysqli_fetch_array($resultClasificacion4))
 												{
 													if ($row['tipo'] == '1') {
-														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<optgroup label='".$row['tema']."' value='".$row['id']."'>".$row['tema']."</optgroup>";
 														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
 													} else {
 														echo "<option value=".$row['id'].">".$row['tema']."</option>";
@@ -597,7 +597,7 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 												while ($row = mysqli_fetch_array($resultClasificacion5))
 												{
 													if ($row['tipo'] == '1') {
-														echo "<optgroup label=".$row['tema']." value=".$row['id'].">".$row['tema']."</optgroup>";
+														echo "<optgroup label='".$row['tema']."' value='".$row['id']."'>".$row['tema']."</optgroup>";
 														echo "<option value=".$row['id'].">".$row['tema']."(+)</option>";
 													} else {
 														echo "<option value=".$row['id'].">".$row['tema']."</option>";
