@@ -19,7 +19,8 @@
 		<br><br><br><br><br>
 				
 			<?php
-				session_start();
+				if(!isset($_SESSION)) 
+					session_start();
 
 				// Check if the user is already logged in
 				if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] != true) {
