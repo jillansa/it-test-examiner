@@ -2,7 +2,7 @@
 
 <?php
 
-session_start();
+if(!isset($_SESSION)) {session_start();}
 header("Content-Type: text/html;charset=utf-8");
 
 // Check if the user is already logged in, if yes then redirect him to welcome page
@@ -371,7 +371,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						console.log(data.sql);
 						
 						<?php			
-							session_start();
 							if($_SESSION["session_username"] == "jillansa") {
 						?>	
 							$("#preguntaTexto").val(data.texto);
@@ -552,7 +551,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						console.log(data.sql);
 
 						<?php			
-							session_start();
 							if($_SESSION["session_username"] == "jillansa") {
 						?>	
 							$("#preguntaTexto").val(data.texto);
@@ -709,7 +707,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 
 						// CARGAR PREGUNTAS
 						<?php			
-							session_start();
 							if($_SESSION["session_username"] == "jillansa") {
 						?>	
 							$("#preguntaTexto").val(data.texto);
@@ -1081,7 +1078,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 						</div>
 						
 						<?php			
-							session_start();
 							if($_SESSION["session_username"] == "jillansa") {
 						?>	
 							<div class="col-sm-1">			
@@ -1205,7 +1201,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 														ofertaExamenPregunta = $('#ofertaExamenPregunta').text();
 
 														<?php			
-															session_start();
 															if($_SESSION["session_username"] == "jillansa") {
 														?>	
 															// al ser HTML input lo cogemos de val()
@@ -1316,7 +1311,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 																								
 												<div class="col-sm-1 infoPregunta" id="idPregunta"></div>
 												<?php			
-													session_start();
 													if($_SESSION["session_username"] == "jillansa") {
 												?>	
 													<div class="col-sm-3 infoPregunta">
@@ -1347,7 +1341,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 												<div class="col-sm-9">
 													
 													<?php			
-														session_start();
 														if($_SESSION["session_username"] == "jillansa") {
 													?>	
 														<textarea class="form-control z-depth-1" name="preguntaTexto" id="preguntaTexto" rows="4"></textarea>
@@ -1416,7 +1409,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 													<td><input id="repuestaA" type="radio" name="respuesta" value="A"></td>
 													<td>													
 													<?php			
-														session_start();
 														if($_SESSION["session_username"] == "jillansa") {
 													?>	
 														<textarea class="form-control z-depth-1" name="areaRespuestaA" id="areaRespuestaA" rows="4"></textarea>
@@ -1433,7 +1425,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 													<td><input id="repuestaB" type="radio" name="respuesta" value="B"></td>
 													<td>
 													<?php			
-														session_start();
 														if($_SESSION["session_username"] == "jillansa") {
 													?>	
 														<textarea class="form-control z-depth-1" name="areaRespuestaB" id="areaRespuestaB" rows="4"></textarea>
@@ -1450,7 +1441,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 													<td><input id="repuestaC" type="radio" name="respuesta" value="C"></td>
 													<td>
 													<?php			
-														session_start();
 														if($_SESSION["session_username"] == "jillansa") {
 													?>	
 														<textarea class="form-control z-depth-1" name="areaRespuestaC" id="areaRespuestaC" rows="4"></textarea>
@@ -1467,7 +1457,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 													<td><input id="repuestaD" type="radio" name="respuesta" value="D"></td>
 													<td>
 													<?php			
-														session_start();
 														if($_SESSION["session_username"] == "jillansa") {
 													?>	
 														<textarea class="form-control z-depth-1" name="areaRespuestaD" id="areaRespuestaD" rows="4"></textarea>
@@ -1503,7 +1492,6 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 											</button>	
 
 											<?php			
-												session_start();
 												if($_SESSION["session_username"] == "jillansa") {
 											?>	
 												<button id="actualizarPreguntaBtn" type="button" class="btn btn-secondary pull-right" aria-label="Left Align">				

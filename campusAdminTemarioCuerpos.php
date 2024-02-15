@@ -2,7 +2,7 @@
 
 <?php
 
-session_start();
+if(!isset($_SESSION)) {session_start();}
 header("Content-Type: text/html;charset=utf-8");
 
 // Include config environment file

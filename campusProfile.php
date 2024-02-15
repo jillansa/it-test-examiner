@@ -1,6 +1,6 @@
 <?php
  
-session_start();
+if(!isset($_SESSION)) {session_start();}
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] != true){
     header("location: campus.php");
@@ -44,11 +44,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] != true){
 
 			<div class="row">
 				<div class="col-sm-6">
-				
-					<?php
-						session_start();
-					?>
-
+									
 					<div class="">
 						<label class="labelLogin" id="labelusername" for="username">USERNAME: </label>
 						<input id="username" name="username" type="text" readonly value="<?php echo htmlspecialchars($_SESSION["session_username"]);?>">                   
@@ -78,7 +74,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] != true){
 				<div class="col-sm-6 panelMiddle">	
 
 					<?php 
-						session_start();
 						// Check if the user is already logged in, if yes then redirect him to welcome page
 						if(isset($_SESSION["active"]) && $_SESSION["active"] === 'S') {
 					?>

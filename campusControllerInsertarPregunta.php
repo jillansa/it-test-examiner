@@ -4,7 +4,7 @@
 //error_reporting(E_ALL);
  //code goes here
 header("Content-Type: text/html;charset=utf-8");
-session_start();
+if(!isset($_SESSION)) {session_start();}
 
 $cursoCuerpoSelect = $_POST["cursoCuerpoSelect"];
 $temaSelect = $_POST["temaSelect"];

@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+if(!isset($_SESSION)) {session_start();}
 header("Content-Type: text/html;charset=utf-8");
 // consulta BBDD
 // Include config environment file
@@ -67,7 +67,6 @@ if (mysqli_num_rows($resultUsername) > 0) {
       exit;
 
 } else {
-      session_start();
       // Password isn't correct, so start a new session    
       header("location: campusLinkResetPassword.php?errorForm=Las datos de identificacion no son correctos. No existe ese usuario/email/dni.");
       exit;

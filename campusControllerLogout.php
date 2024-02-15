@@ -1,6 +1,6 @@
 <?php
 // Initialize the session
-session_start();
+if(!isset($_SESSION)) {session_start();}
 header("Content-Type: text/html;charset=utf-8");
 // Unset all of the session variables
 // CLEAR THE INFORMATION FROM THE $_SESSION ARRAY
