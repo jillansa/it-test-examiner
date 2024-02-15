@@ -34,7 +34,7 @@
                         <div>
                             <label class="labelLogin" id="labelpassword2" for="password2">PASSWORD: </label>
                             <input id="password2" name="register_password2" type="password" required="true" placeholder="Repite el password">
-                            <div class="divError"><?php if (isset($_GET["errorlabelpassword2"])) { echo $_GET["errorlabelpassword2"]};?></div>
+                            <div class="divError"><?php if (4isset($_GET["errorlabelpassword2"])) { echo $_GET["errorlabelpassword2"];}?></div>
                         </div>
 
                         <div>
