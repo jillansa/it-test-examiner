@@ -8,7 +8,7 @@
 		<a href="campusRealizarTest.php">Tests</a>		
 		
 		<?php			
-			if(!isset($_SESSION)) session_start();
+			if(!isset($_SESSION)) {session_start();}
 
 			if(if(isset($_SESSION["session_username"])) && $_SESSION["session_username"] == "jillansa") {
 		?>				
