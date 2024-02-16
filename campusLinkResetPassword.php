@@ -33,7 +33,7 @@
                         <button type="submit">Enviar mail</button>
                     </div>   
                     
-                    <div class="divError"><?php echo $_GET["errorForm"];?></div>
+                    <div class="divError"><?php if (isset($_GET["errorForm"])) {echo $_GET["errorForm"];}?></div>
                     
                 </form>
             </div>

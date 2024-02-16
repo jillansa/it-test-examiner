@@ -37,7 +37,7 @@
                         <button type="submit">Iniciar sesión</button>
                     </div>   
                     
-                    <div class="divError"><?php echo $_GET["errorForm"];?></div>
+                    <div class="divError"><?php if (isset($_GET["errorForm"])) {echo $_GET["errorForm"];}?></div>
                     
                 </form>
             </div>
