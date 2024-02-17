@@ -6,9 +6,9 @@
 header("Content-Type: text/html;charset=utf-8");
 if(!isset($_SESSION)) {session_start();}
 
-$idCuerpo = $_POST["cursoCuerpoSelect"];
-$selected = $_POST["selected"];
-$mode = $_POST["mode"];
+if (isset($_POST["cursoCuerpoSelect"])) {$idCuerpo = $_POST["cursoCuerpoSelect"];}
+if (isset($_POST["selected"])) {$selected = $_POST["selected"];}
+if (isset($_POST["mode"])) {$mode = $_POST["mode"];}
 
 require_once "campusConfig.php";
  

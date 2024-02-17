@@ -6,13 +6,14 @@
 header("Content-Type: text/html;charset=utf-8");
 if(!isset($_SESSION)) {session_start();}
 
-$cursoCuerpoSelect2 = $_POST["cursoCuerpoSelect2"];
-$descripcionExamen = $_POST["descripcionExamen"];
-$fechaExamen = $_POST["fechaExamen"];
-$modalidadExamen = $_POST["modalidadExamen"];
-$anioOfertaExamen = $_POST["anioOfertaExamen"];
-$ofertaExamen = $_POST["ofertaExamen"];
-$entidadExamen = $_POST["entidadExamen"];
+
+if (isset($_POST["cursoCuerpoSelect2"])) {$cursoCuerpoSelect2 = $_POST["cursoCuerpoSelect2"];}
+if (isset($_POST["descripcionExamen"])) {$descripcionExamen = $_POST["descripcionExamen"];}
+if (isset($_POST["fechaExamen"])) {$fechaExamen = $_POST["fechaExamen"];}
+if (isset($_POST["modalidadExamen"])) {$modalidadExamen = $_POST["modalidadExamen"];}
+if (isset($_POST["anioOfertaExamen"])) {$anioOfertaExamen = $_POST["anioOfertaExamen"];}
+if (isset($_POST["ofertaExamen"])) {$ofertaExamen = $_POST["ofertaExamen"];}
+if (isset($_POST["entidadExamen"])) {$entidadExamen = $_POST["entidadExamen"];}
 
 $modo = $_POST["modo"];
 

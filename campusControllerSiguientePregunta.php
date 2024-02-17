@@ -18,7 +18,7 @@ require_once "campusConfig.php";
 // En funcion del si es consulta nueva o se ha pulsado en siguiente, cogemos los datos del POST o de los almacenados en SESSION
 
 
-if ($_POST["recuperarSesion"] == "1") {
+if (isset($_POST["recuperarSesion"]) && $_POST["recuperarSesion"] == "1") {
     
     $querySesion = "SELECT sesionUsuario FROM tabUsuario WHERE id = " . $_SESSION["session_id_username"] . " " ; 
     //print ($querySesion);

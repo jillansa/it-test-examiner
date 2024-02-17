@@ -6,8 +6,8 @@
 header("Content-Type: text/html;charset=utf-8");
 if(!isset($_SESSION)) {session_start();}
 
-$cursoCuerpoSelect = $_POST["cursoCuerpoSelect"];
-$bloqueSelect = $_POST["bloqueSelect"];
+if (isset($_POST["cursoCuerpoSelect"])) {$cursoCuerpoSelect = $_POST["cursoCuerpoSelect"];}
+if (isset($_POST["bloqueSelect"])) {$bloqueSelect = $_POST["bloqueSelect"];}
 
 // consulta BBDD
 // Include config environment file

@@ -3,18 +3,18 @@
 if(!isset($_SESSION)) {session_start();}
 header("Content-Type: text/html;charset=utf-8");
 
-$idPregunta = $_POST["idPregunta"];
-$preguntaTxt = $_POST["preguntaTxt"];
-$respuestaTxtA = $_POST["respuestaTxtA"];
-$respuestaTxtB = $_POST["respuestaTxtB"];
-$respuestaTxtC = $_POST["respuestaTxtC"];
-$respuestaTxtD = $_POST["respuestaTxtD"];
-$idRespuestaA = $_POST["idRespuestaA"];
-$idRespuestaB = $_POST["idRespuestaB"];
-$idRespuestaC = $_POST["idRespuestaC"];
-$idRespuestaD = $_POST["idRespuestaD"];
-$respuestaCorrecta = $_POST["respuestaCorrecta"];
-$temaSelectPregunta = $_POST["temaSelectPregunta"];
+if (isset($_POST["idPregunta"])) {$idPregunta = $_POST["idPregunta"];}
+if (isset($_POST["preguntaTxt"])) {$preguntaTxt = $_POST["preguntaTxt"];}
+if (isset($_POST["respuestaTxtA"])) {$respuestaTxtA = $_POST["respuestaTxtA"];}
+if (isset($_POST["respuestaTxtB"])) {$respuestaTxtB = $_POST["respuestaTxtB"];}
+if (isset($_POST["respuestaTxtC"])) {$respuestaTxtC = $_POST["respuestaTxtC"];}
+if (isset($_POST["respuestaTxtD"])) {$respuestaTxtD = $_POST["respuestaTxtD"];}
+if (isset($_POST["idRespuestaA"])) {$idRespuestaA = $_POST["idRespuestaA"];}
+if (isset($_POST["idRespuestaB"])) {$idRespuestaB = $_POST["idRespuestaB"];}
+if (isset($_POST["idRespuestaC"])) {$idRespuestaC = $_POST["idRespuestaC"];}
+if (isset($_POST["idRespuestaD"])) {$idRespuestaD = $_POST["idRespuestaD"];}
+if (isset($_POST["respuestaCorrecta"])) {$respuestaCorrecta = $_POST["respuestaCorrecta"];}
+if (isset($_POST["temaSelectPregunta"])) {$temaSelectPregunta = $_POST["temaSelectPregunta"];}
 
 // consulta BBDD
 // Include config environment file
