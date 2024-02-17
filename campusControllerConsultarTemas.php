@@ -17,7 +17,7 @@ $queryClasificacion = "SELECT distinct
 tco.bloque, tco2.id, tco2.tema, tco2.tipo
 FROM tabClasificacion tco, tabClasificacion tco2 ";
 
-if ($cursoCuerpoSelect <> "") {
+if (isset($_POST["cursoCuerpoSelect"]) && $cursoCuerpoSelect <> "") {
     $queryClasificacion = $queryClasificacion . " , tabClasificacionCuerpo tcoc 
     WHERE 1 = 1
     AND tcoc.idClasificacion = tco2.id 
@@ -31,7 +31,7 @@ AND tco.tipo = 1
 AND tco2.idBloque = tco.id ";
 
 
-if ($bloqueSelect <> "") {
+if (isset($_POST["bloqueSelect"]) && $bloqueSelect <> "") {
     $queryClasificacion = $queryClasificacion . " AND tco2.idBloque = " . $bloqueSelect . " "; 
 } 
 
