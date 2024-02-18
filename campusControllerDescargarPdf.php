@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ERROR); 
+
 $pdf =& new FPDI_Protection();
 // set the format of the destinaton file, in our case 6×9 inch
 $pdf->FPDF('P', 'in', array('6','9'));

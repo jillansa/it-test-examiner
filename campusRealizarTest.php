@@ -2,6 +2,8 @@
 
 <?php
 
+error_reporting(E_ERROR); 
+
 if(!isset($_SESSION)) {session_start();}
 header("Content-Type: text/html;charset=utf-8");
 

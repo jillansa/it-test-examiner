@@ -1,8 +1,12 @@
  
 <!DOCTYPE html>
 <html lang="es">
+    
+<?php 
+error_reporting(E_ERROR); 
+include 'campusHeadIncludes.php';
+?>
 
-<?php include 'campusHeadIncludes.php';?>
 
 <body>
     <div class="container-fluid">	  

@@ -1,4 +1,4 @@
-
+<?php error_reporting(E_ERROR); ?>
 	<div class="container-fuild" style="background-color:lightgray">
         <div class="center">
             <div class="row">

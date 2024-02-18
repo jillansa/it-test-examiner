@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<?php include 'campusHeadIncludes.php';?>
+<?php 
+error_reporting(E_ERROR); 
+include 'campusHeadIncludes.php';
+?>
 
 <body>
     <div class="container-fluid">	  

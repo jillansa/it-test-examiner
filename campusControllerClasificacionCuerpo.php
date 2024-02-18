@@ -1,7 +1,8 @@
 <?php
 
 //ini_set("display_errors",1);
-//error_reporting(E_ALL);
+error_reporting(E_ERROR); 
+
  //code goes here
 header("Content-Type: text/html;charset=utf-8");
 if(!isset($_SESSION)) {session_start();}
