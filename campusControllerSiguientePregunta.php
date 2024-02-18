@@ -461,7 +461,7 @@ Estadisticas CURSO/CUERPO
 
 $queryEstadisticas = "SELECT count(1) as num from (select distinct ru.id 
 FROM tabRespuestasUsuario ru, tabPreguntas p, tabPreguntasClasificacion pc,
-tabClasificacionOriginal co, tabClasificacionOriginalCuerpo coc, tabCuerpo c 
+tabClasificacion co, tabClasificacionCuerpo coc, tabCuerpo c 
 WHERE ru.idPregunta = p.id 
 AND ru.acierto = 1 
 AND ru.idUsuario = " . $_SESSION["session_id_username"] . 
@@ -484,7 +484,7 @@ if ( is_null($pregunta['aciertosCursoOferta'])) $pregunta['aciertosCursoOferta']
 
 $queryEstadisticas = "SELECT count(1) as num from (select distinct ru.id 
 FROM tabRespuestasUsuario ru, tabPreguntas p, tabPreguntasClasificacion pc,
-tabClasificacionOriginal co, tabClasificacionOriginalCuerpo coc, tabCuerpo c 
+tabClasificacion co, tabClasificacionCuerpo coc, tabCuerpo c 
 WHERE ru.idPregunta = p.id 
 AND ru.acierto = 0 
 AND ru.idUsuario = " . $_SESSION["session_id_username"] . 
