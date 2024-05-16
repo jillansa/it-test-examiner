@@ -41,7 +41,7 @@ VALUES ('".$examenSelect."','".$preguntaTexto."')";
 
 $sql+=$query;
 
-//echo '1 - '; exit;
+echo '1 - '; exit;
 
 if (mysqli_query($link, $query)) {
 
