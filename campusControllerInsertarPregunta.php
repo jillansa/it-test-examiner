@@ -36,8 +36,8 @@ exit;*/
 $query = "INSERT INTO `tabPreguntas`(`idExamen`, `texto`) 
 VALUES ('".$examenSelect."','".$preguntaTexto."')";
 
-echo $query; 
-exit;
+//echo $query; 
+//exit;
 
 $sql+=$query;
 
@@ -78,7 +78,7 @@ if (mysqli_query($link, $query)) {
 
  } else {
     // Insert Error
-    //echo "Llegamos al final con ERROR: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $query ;
+    echo "Llegamos al final con ERROR: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $query ;
     echo $sql;
     exit;
  }
