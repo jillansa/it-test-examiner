@@ -41,11 +41,11 @@ VALUES ('".$examenSelect."','".$preguntaTexto."')";
 
 $sql+=$query;
 
-echo '1 - ';
+//echo '1 - '; exit;
 
 if (mysqli_query($link, $query)) {
 
-   echo '2 - ';
+   echo '2 - '; exit;
 
    // Insert ok
    $query = "SELECT LAST_INSERT_ID()";
@@ -53,12 +53,14 @@ if (mysqli_query($link, $query)) {
    $row = mysqli_fetch_row($result);
    $preguntaId = $row[0];
 
-   echo '3 - ';
+   echo '3 - '; exit;
 
    $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
    VALUES ('".$preguntaId."','".$temaSelect."')";
    $sql+="  " . $query;
    mysqli_query($link, $query);
+
+   echo '4 - '; exit;
    
    $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
    VALUES ('".$preguntaId."','".$repuestaA."','".$respuestaCheckedA."')";
