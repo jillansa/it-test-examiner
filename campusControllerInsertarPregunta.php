@@ -39,13 +39,13 @@ VALUES ('".$examenSelect."','".$preguntaTexto."')";
 //echo $query; 
 //exit;
 
-$sql+=$query;
+$sql=$query;
 
-echo '1 - '; exit;
+//echo '1 - '; exit;
 
 if (mysqli_query($link, $query)) {
 
-   echo '2 - '; exit;
+   //echo '2 - '; exit;
 
    // Insert ok
    $query = "SELECT LAST_INSERT_ID()";
@@ -53,7 +53,7 @@ if (mysqli_query($link, $query)) {
    $row = mysqli_fetch_row($result);
    $preguntaId = $row[0];
 
-   echo '3 - '; exit;
+   //echo '3 - '; exit;
 
    $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
    VALUES ('".$preguntaId."','".$temaSelect."')";
