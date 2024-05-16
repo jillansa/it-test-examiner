@@ -36,6 +36,9 @@ exit;*/
 $query = "INSERT INTO `tabPreguntas`(`idExamen`, `texto`) 
 VALUES ('".$examenSelect."','".$preguntaTexto."')";
 
+echo $query; 
+exit;
+
 $sql+=$query;
 
 if (mysqli_query($link, $query)) {
