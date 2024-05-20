@@ -95,9 +95,9 @@ $resultClasificacion5 = mysqli_query($link, $queryClasificacion);
 								repuestaC: repuestaC, respuestaCheckedC: respuestaCheckedC,
 								repuestaD: repuestaD, respuestaCheckedD: respuestaCheckedD},
 							success: function(dataresponse, statustext, response){
-								var data = JSON.parse(dataresponse);
+								//var data = JSON.parse(dataresponse);
 							
-								alert("Preguntar cargadas correctamente");
+								alert(dataresponse);
 							},
 							error: function(request, errorcode, errortext){
 								$("#statusConsole").html("<p>Ocurrió un error en la consulta de datos</p>");
