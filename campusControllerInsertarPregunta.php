@@ -59,7 +59,7 @@ try {
    
       $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
       VALUES ('".$preguntaId."','".$temaSelect."')";
-      $sql+="  " . $query;
+      //$sql+="  " . $query;
       mysqli_query($link, $query);
    
       //echo '4 - '; 
@@ -67,25 +67,25 @@ try {
       
       $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
       VALUES ('".$preguntaId."','".$repuestaA."','".$respuestaCheckedA."')";
-      $sql+="  " . $query;
+      //$sql+="  " . $query;
       mysqli_query($link, $query);
       
       $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
       VALUES ('".$preguntaId."','".$repuestaB."','".$respuestaCheckedB."')";
-      $sql+="  " . $query;
+      //$sql+="  " . $query;
       mysqli_query($link, $query);
    
       $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
       VALUES ('".$preguntaId."','".$repuestaC."','".$respuestaCheckedC."')";
-      $sql+="  " . $query;
+      //$sql+="  " . $query;
       mysqli_query($link, $query);
    
       $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
       VALUES ('".$preguntaId."','".$repuestaD."','".$respuestaCheckedD."')";
-      $sql+="  " . $query;
+      //$sql+="  " . $query;
       mysqli_query($link, $query);
    
-      echo "Insertadas todas las respuestas: " . $sql;
+      echo "Insertadas todas las respuestas: " . $query;
       exit;
    
     } else {
