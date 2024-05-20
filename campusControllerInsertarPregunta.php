@@ -37,62 +37,69 @@ $query = "INSERT INTO `tabPreguntas`(`idExamen`, `texto`)
 VALUES ('".$examenSelect."','".$preguntaTexto."')";
 
 echo $query; 
-exit;
+//exit;
 
 //$sql=$query;
-
 //echo '1 - '; exit;
+try {
 
-if (mysqli_query($link, $query)) {
+   if (mysqli_query($link, $query)) {
 
-   //echo '2 - '; exit;
-
-   // Insert ok
-   $query = "SELECT LAST_INSERT_ID()";
-   $result = mysqli_query($link, $query);
-   $row = mysqli_fetch_row($result);
-   $preguntaId = $row[0];
-
-   //echo '3 - '; exit;
-
-   $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
-   VALUES ('".$preguntaId."','".$temaSelect."')";
-   $sql+="  " . $query;
-   mysqli_query($link, $query);
-
-   echo '4 - '; exit;
+      echo 'Pregunta insertada correctamente'; 
+      exit;
    
-   $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
-   VALUES ('".$preguntaId."','".$repuestaA."','".$respuestaCheckedA."')";
-   $sql+="  " . $query;
-   mysqli_query($link, $query);
+      // Insert ok
+      $query = "SELECT LAST_INSERT_ID()";
+      $result = mysqli_query($link, $query);
+      $row = mysqli_fetch_row($result);
+      $preguntaId = $row[0];
    
-   $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
-   VALUES ('".$preguntaId."','".$repuestaB."','".$respuestaCheckedB."')";
-   $sql+="  " . $query;
-   mysqli_query($link, $query);
+      //echo '3 - '; 
+      //exit;
+   
+      $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
+      VALUES ('".$preguntaId."','".$temaSelect."')";
+      $sql+="  " . $query;
+      mysqli_query($link, $query);
+   
+      //echo '4 - '; 
+      //exit;
+      
+      $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
+      VALUES ('".$preguntaId."','".$repuestaA."','".$respuestaCheckedA."')";
+      $sql+="  " . $query;
+      mysqli_query($link, $query);
+      
+      $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
+      VALUES ('".$preguntaId."','".$repuestaB."','".$respuestaCheckedB."')";
+      $sql+="  " . $query;
+      mysqli_query($link, $query);
+   
+      $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
+      VALUES ('".$preguntaId."','".$repuestaC."','".$respuestaCheckedC."')";
+      $sql+="  " . $query;
+      mysqli_query($link, $query);
+   
+      $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
+      VALUES ('".$preguntaId."','".$repuestaD."','".$respuestaCheckedD."')";
+      $sql+="  " . $query;
+      mysqli_query($link, $query);
+   
+      echo $sql;
+      exit;
+   
+    } else {
+       // Insert Error
+       echo "Llegamos al final con ERROR: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $query ;
+       exit;
+    }
 
-   $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
-   VALUES ('".$preguntaId."','".$repuestaC."','".$respuestaCheckedC."')";
-   $sql+="  " . $query;
-   mysqli_query($link, $query);
-
-   $query = "INSERT INTO `tabRespuestas`(`idPregunta`, `texto`, `correcta`) 
-   VALUES ('".$preguntaId."','".$repuestaD."','".$respuestaCheckedD."')";
-   $sql+="  " . $query;
-   mysqli_query($link, $query);
-
-   echo $sql;
+} catch (Exception $e) {
+   echo 'Excepción capturada: ',  $e->getMessage(), "\n";
    exit;
+}
 
- } else {
-    // Insert Error
-    echo "Llegamos al final con ERROR: " . $idPregunta . " | " . $idUsuario . " | " . $acierto . " | " . $query ;
-    echo $sql;
-    exit;
- }
-
- echo $sql;
+ echo "No se ha insertado la pregunta";
  exit;
 
 ?>
