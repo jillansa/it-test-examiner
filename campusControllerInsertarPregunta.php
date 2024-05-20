@@ -36,10 +36,10 @@ exit;*/
 $query = "INSERT INTO `tabPreguntas`(`idExamen`, `texto`) 
 VALUES ('".$examenSelect."','".$preguntaTexto."')";
 
-//echo $query; 
-//exit;
+echo $query; 
+exit;
 
-$sql=$query;
+//$sql=$query;
 
 //echo '1 - '; exit;
 
