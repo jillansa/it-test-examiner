@@ -46,7 +46,7 @@ try {
    if (mysqli_query($link, $query)) {
 
       echo 'Pregunta insertada correctamente'; 
-      exit;
+      //exit;
    
       // Insert ok
       $query = "SELECT LAST_INSERT_ID()";
@@ -54,8 +54,8 @@ try {
       $row = mysqli_fetch_row($result);
       $preguntaId = $row[0];
    
-      //echo '3 - '; 
-      //exit;
+      echo 'Ultimo ID insertado: ' . $preguntaId; 
+      exit;
    
       $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
       VALUES ('".$preguntaId."','".$temaSelect."')";
