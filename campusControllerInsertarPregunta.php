@@ -55,7 +55,7 @@ try {
       $preguntaId = $row[0];
    
       echo 'Ultimo ID insertado: ' . $preguntaId; 
-      exit;
+      //exit;
    
       $query = "INSERT INTO `tabPreguntasClasificacion`(`idPregunta`, `idClasificacion`) 
       VALUES ('".$preguntaId."','".$temaSelect."')";
@@ -85,7 +85,7 @@ try {
       $sql+="  " . $query;
       mysqli_query($link, $query);
    
-      echo $sql;
+      echo "Insertadas todas las respuestas: " . $sql;
       exit;
    
     } else {
