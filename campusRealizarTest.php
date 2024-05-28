@@ -1031,7 +1031,7 @@ $resultCuerpo = mysqli_query($link, $queryCuerpo);
 							<!--</div>-->
 						</div>
 						<div class="col-sm-3">
-								<label for="anioOfertaFilter">Fec. Examen [ YYYY >= ]:</label><br>
+								<label for="anioOfertaFilter">Fec. Examen [ >= YYYY ]:</label><br>
 								<input id="anioOfertaFilter" type="text" class="" placeholder="Search Year Filter" name="anioOfertaFilter" style="width: 80%;">										
 							
 						</div>		
