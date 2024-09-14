@@ -185,11 +185,11 @@ while ($row = mysqli_fetch_array($resultPregunta))
         if (boolval($row['correcta']) == true ){
             echo "<td>(*)</td><td>";
             echo "<div style='color: #339800;'>";            
-            echo $row['texto'] . '</div>';
+            echo '<code>' . $row['texto'] . '</code></div>';
             echo "</td>";         
             
         } else {
-            echo "<td></td><td>" . $row['texto'] . '</td>';
+            echo "<td></td><td><code>" . $row['texto'] . '</code></td>';
         }
 
         echo "</tr>";
