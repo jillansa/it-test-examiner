@@ -169,7 +169,7 @@ while ($row = mysqli_fetch_array($resultPregunta))
     echo  '<b>TEMA: </b>' . $row['tema'] . ' ';
     echo  '<b>EXAMEN: </b>' . $row['examen'] . ' ';
     echo  '<br><b>' . "PREGUNTA: " . '</b><br>';
-    echo  $row['texto'] . '<br>';
+    echo  htmlspecialchars($row['texto']) . '<br>';
     echo  '<br>';
     //exit;
 
